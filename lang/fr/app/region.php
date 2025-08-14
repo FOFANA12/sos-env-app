@@ -7,7 +7,5 @@ return [
     ],
     'request' => [
         'name' => 'nom de la région ',
-        'latitude' => 'latitude',
-        'longitude' => 'longitude',
     ],
 ];

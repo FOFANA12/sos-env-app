@@ -7,9 +7,9 @@ use App\Traits\AutoFillable;
 use App\Traits\GeneratesUuid;
 use App\Traits\HasStaticTableName;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Region extends Model
+class Department extends Model
 {
     use Author, AutoFillable, GeneratesUuid, HasStaticTableName;
 
@@ -25,8 +25,8 @@ class Region extends Model
         ];
     }
 
-    public function departments(): HasMany
+    public function region(): BelongsTo
     {
-        return $this->hasMany(Department::class, 'region_uuid', 'uuid');
+        return $this->belongsTo(Region::class, 'region_uuid', 'uuid');
     }
 }

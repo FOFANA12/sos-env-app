@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             [
                 UserSeeder::class,
                 RegionSeeder::class,
+                DepartmentSeeder::class , 
             ]
         );
     }

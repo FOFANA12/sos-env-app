@@ -48,8 +48,8 @@ class RegionController extends Controller
      */
     public function store(RegionRequest $request)
     {
-        $this->repository->store($request);
-        return response()->json(['message' => $this->messageSuccessCreated])->setStatusCode(Response::HTTP_OK);
+        $region = $this->repository->store($request);
+        return response()->json(['message' => $this->messageSuccessCreated, 'region' => $region])->setStatusCode(Response::HTTP_OK);
     }
 
     /**
