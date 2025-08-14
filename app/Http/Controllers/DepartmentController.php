@@ -13,8 +13,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class DepartmentController extends Controller
 {
-   use ApiResponse;
-    
+    use ApiResponse;
+
     private $messageSuccessCreated;
     private $messageSuccessUpdated;
     private $messageSuccessDeleted;
@@ -43,6 +43,14 @@ class DepartmentController extends Controller
             ->setStatusCode(Response::HTTP_OK);
     }
 
+    /**
+     * Requirements data for department.
+     */
+    public function requirements()
+    {
+        return response()->json($this->repository->requirements())->setStatusCode(Response::HTTP_OK);
+    }
+    
     /**
      * Store a newly created department.
      */

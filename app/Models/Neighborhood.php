@@ -8,9 +8,8 @@ use App\Traits\GeneratesUuid;
 use App\Traits\HasStaticTableName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Department extends Model
+class Neighborhood extends Model
 {
     use Author, AutoFillable, GeneratesUuid, HasStaticTableName;
 
@@ -26,13 +25,8 @@ class Department extends Model
         ];
     }
 
-    public function region(): BelongsTo
+    public function department(): BelongsTo
     {
-        return $this->belongsTo(Region::class, 'region_uuid', 'uuid');
-    }
-
-    public function neighborhoods(): HasMany
-    {
-        return $this->hasMany(Neighborhood::class, 'department_uuid', 'uuid');
+        return $this->belongsTo(Department::class, 'department_uuid', 'uuid');
     }
 }
