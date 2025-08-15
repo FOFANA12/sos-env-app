@@ -35,4 +35,9 @@ class Department extends Model
     {
         return $this->hasMany(Neighborhood::class, 'department_uuid', 'uuid');
     }
+
+    public function Reports(): HasMany
+    {
+        return $this->hasMany(Report::class, 'department_uuid', 'uuid');
+    }
 }

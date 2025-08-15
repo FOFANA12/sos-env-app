@@ -29,4 +29,9 @@ class Region extends Model
     {
         return $this->hasMany(Department::class, 'region_uuid', 'uuid');
     }
+
+    public function Reports(): HasMany
+    {
+        return $this->hasMany(Report::class, 'region_uuid', 'uuid');
+    }
 }

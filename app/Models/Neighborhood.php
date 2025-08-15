@@ -7,6 +7,7 @@ use App\Traits\AutoFillable;
 use App\Traits\GeneratesUuid;
 use App\Traits\HasStaticTableName;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Neighborhood extends Model
@@ -28,5 +29,10 @@ class Neighborhood extends Model
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_uuid', 'uuid');
+    }
+    
+    public function Reports(): HasMany
+    {
+        return $this->hasMany(Report::class, 'neighborhood_uuid', 'uuid');
     }
 }

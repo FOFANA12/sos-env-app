@@ -7,6 +7,7 @@ use App\Traits\AutoFillable;
 use App\Traits\GeneratesUuid;
 use App\Traits\HasStaticTableName;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ReportCategory extends Model
 {
@@ -22,5 +23,11 @@ class ReportCategory extends Model
         return [
             'status' => 'boolean'
         ];
+    }
+
+    
+    public function Reports(): HasMany
+    {
+        return $this->hasMany(Report::class, 'category_uuid', 'uuid');
     }
 }

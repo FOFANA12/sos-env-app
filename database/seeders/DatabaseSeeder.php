@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
                 DepartmentSeeder::class , 
                 NeighborhoodSeeder::class,
                 ReportCategorySeeder::class,
+                ReportSeeder::class,
             ]
         );
     }
