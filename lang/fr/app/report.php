@@ -2,8 +2,8 @@
 
 return [
     'controller' => [
-        'message_success_created' => 'Le rapport a été créée avec succès.',
-        'message_success_updated' => 'Le rapport a été mise à jour avec succès.',
+        'message_success_created' => 'Le rapport a été créé avec succès.',
+        'message_success_updated' => 'Le rapport a été mis à jour avec succès.',
     ],
     'request' => [
         'category' => 'catégorie du rapport',

@@ -5,6 +5,7 @@ use App\Http\Controllers\NeighborhoodController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\ReportCategoryController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportPhotoController;
 use Illuminate\Support\Facades\Route;
 
 // regions
@@ -39,3 +40,10 @@ Route::prefix('reports')->controller(ReportController::class)->group(function ()
     Route::post('destroy', 'destroy');
 });
 Route::apiResource('reports', ReportController::class)->only(['index', 'store', 'show', 'update']);
+
+// report photos
+Route::prefix('report-photos')->controller(ReportPhotoController::class)->group(function () {
+    Route::get('requirements', 'requirements');
+    Route::post('destroy', 'destroy');
+});
+Route::apiResource('report-photos', ReportPhotoController::class)->only(['index', 'store', 'show', 'update']);
