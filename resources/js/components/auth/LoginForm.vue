@@ -282,7 +282,7 @@ const logout = async () => {
 });
 
 const handleGoogleLogin = () => {
-  window.location.href = "/auth/google";
+  window.location.href = "/auth/google/login";
 };
 
 const handleSubmit = async () => {

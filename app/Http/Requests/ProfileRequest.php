@@ -29,12 +29,12 @@ class ProfileRequest extends FormRequest
             'name' => 'bail|required|max:100',
             'phone' => 'bail|required|string|max:20|unique:' . User::tableName() . ',phone,' . $user->id,
             'avatar' => 'bail|nullable|max:5120|mimes:jpeg,png,jpg',
+            'password' => 'bail|nullable|min:6|confirmed',
         ];
 
         if (is_null($user->google_id)) {
             $rules += [
                 'email' => 'bail|required|email|max:150|unique:' . User::tableName() . ',email,' . $user->id,
-                'password' => 'bail|nullable|min:6|confirmed',
             ];
         }
 

@@ -47,6 +47,14 @@ class LoginController extends Controller
     }
 
     /**
+     * Redirect the user to Google's OAuth page.
+     */
+    public function googleRedirect()
+    {
+        return $this->repository->getGoogleRedirectUrl();
+    }
+
+    /**
      * Log out the user from SPA (web browser).
      */
     public function spaLogout()

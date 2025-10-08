@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\Auth\UserProfileResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginRepository
 {
@@ -15,13 +16,15 @@ class LoginRepository
         $credentials = $request->only(['email', 'password']);
         $credentials['status'] = true;
 
-        if (! Auth::attempt($credentials)) {
-            abort(Response::HTTP_UNAUTHORIZED, __('app/auth/common.failed'));
+        if (! Auth::guard('web')->attempt($credentials)) {
+            abort(Response::HTTP_UNAUTHORIZED, __('app/auth/common.invalid_credentials'));
         }
 
         $user = Auth::guard()->user();
         $tokenName = $request->input('device_name', 'WebApp');
         $token = $user->createToken($tokenName)->plainTextToken;
+
+        $user->update(['last_login_at' => now()]);
 
         return [
             'token' => $token,
@@ -42,14 +45,25 @@ class LoginRepository
         $credentials['status'] = true;
 
         if (! Auth::guard('web')->attempt($credentials)) {
-            abort(Response::HTTP_UNAUTHORIZED, __('app/auth/common.failed'));
+            abort(Response::HTTP_UNAUTHORIZED, __('app/auth/common.invalid_credentials'));
         }
 
         $user = Auth::guard('web')->user();
 
+        $user->update(['last_login_at' => now()]);
+        
         return [
             'user' => new UserProfileResource($user),
         ];
+    }
+
+    /**
+     * Redirect the user to Google's OAuth login page
+     */
+    public function getGoogleRedirectUrl()
+    {
+        session(['google_action' => 'login']);
+        return Socialite::driver('google')->redirect();
     }
 
     /**

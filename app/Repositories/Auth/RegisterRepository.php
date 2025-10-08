@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Laravel\Socialite\Facades\Socialite;
 
 class RegisterRepository
 {
@@ -40,5 +41,14 @@ class RegisterRepository
         }
 
         return new UserProfileResource($user);
+    }
+
+    /**
+     * Redirect the user to Google's OAuth consent screen.
+     */
+    public function getGoogleRedirectUrl()
+    {
+        session(['google_action' => 'register']);
+        return Socialite::driver('google')->redirect();
     }
 }

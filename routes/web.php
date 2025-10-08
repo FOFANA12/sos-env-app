@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Auth\GoogleCallbackController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -12,6 +14,12 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', fn() => view('pages/contact'))->name('contact');
 Route::get('/privacy', fn() => view('pages/privacy'))->name('privacy');
 Route::get('/terms', fn() => view('pages/terms'))->name('terms');
+
+Route::get('/auth/google/login', [LoginController::class, 'googleRedirect'])->name('login.google');
+Route::get('/auth/google/register', [RegisterController::class, 'googleRedirect'])->name('register.google');
+
+Route::get('/auth/google/callback', [GoogleCallbackController::class, 'googleCallback'])
+    ->name('google.callback');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', fn() => view('pages/auth/login'))->name('login');

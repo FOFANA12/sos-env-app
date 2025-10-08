@@ -51,7 +51,7 @@ class LoginRequest extends FormRequest
             }
 
             if (!$user->status) {
-                $validator->errors()->add('email', __('app/auth/common.inactive'));
+                $validator->errors()->add('email', __('app/auth/common.account_disabled'));
                 return;
             }
 

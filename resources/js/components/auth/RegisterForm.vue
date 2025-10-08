@@ -346,6 +346,10 @@ const togglePasswordConfirmationVisibility = () => {
   showPasswordConfirmation.value = !showPasswordConfirmation.value;
 };
 
+const handleGoogleRegister = () => {
+  window.location.href = "/auth/google/register";
+};
+
 const handleSubmit = async () => {
   alert.value = { type: null, message: null };
 
@@ -363,7 +367,6 @@ const handleSubmit = async () => {
     });
 
     window.location.href = route("login");
-
   } catch (error) {
     if (error?.response?.status !== 422 && error?.response?.data?.message) {
       alert.value = {
@@ -375,5 +378,4 @@ const handleSubmit = async () => {
     }
   }
 };
-
 </script>

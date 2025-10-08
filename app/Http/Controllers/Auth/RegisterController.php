@@ -31,4 +31,12 @@ class RegisterController extends Controller
             'user' => $this->repository->register($request),
         ], Response::HTTP_CREATED);
     }
+
+    /**
+     * Redirect the user to Google's OAuth page.
+     */
+    public function googleRedirect()
+    {
+        return $this->repository->getGoogleRedirectUrl();
+    }
 }

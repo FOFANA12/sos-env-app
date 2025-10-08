@@ -25,7 +25,7 @@ class UserProfileResource extends JsonResource
             'avatar_url'   => $this->avatar ? FileHelper::url("uploads/avatars/{$this->avatar}") : null,
             'role' => Role::get($this->role, app()->getLocale()),
             'signup_method' => $this->signup_method,
-            'is_google_linked' => !is_null($this->google_id),
+            'is_google_linked' => !is_null($this->google_id) && $this->signup_method === 'google',
             'status' => (bool) $this->status,
             'terms_accepted_at' => DateTimeFormatter::formatDatetime($this->terms_accepted_at),
             'last_login_at' => $this->last_login_at

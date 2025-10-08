@@ -46,17 +46,22 @@ class ResetPasswordRequest extends FormRequest
             $user = User::where('email', $this->input('email'))->first();
 
             if (!$user) {
-                $validator->errors()->add('email', __('app/auth/common.email_not_found'));
+                $validator->errors()->add('email', __('app/auth/common.invalid_credentials'));
                 return;
             }
 
             if (!$user->status) {
-                $validator->errors()->add('email', __('app/auth/common.inactive'));
+                $validator->errors()->add('email', __('app/auth/common.account_disabled'));
+                return;
+            }
+
+            if ($user->google_id && $user->signup_method === 'google') {
+                $validator->errors()->add('email', __('app/auth/common.goole.reset_not_allowed'));
                 return;
             }
         });
     }
-    
+
 
     /**
      * Get attribute names for translations.

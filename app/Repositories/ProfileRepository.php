@@ -63,10 +63,10 @@ class ProfileRepository
                 if ($request->filled('email')) {
                     $user->email = $request->input('email');
                 }
+            }
 
-                if ($request->filled('password')) {
-                    $user->password = Hash::make($request->input('password'));
-                }
+            if ($request->filled('password') && $user->signup_method !== 'google') {
+                $user->password = Hash::make($request->input('password'));
             }
 
             $user->save();

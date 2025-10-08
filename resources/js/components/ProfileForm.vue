@@ -101,7 +101,16 @@
 
                 <!-- Email -->
                 <div class="col-span-12 md:col-span-6">
+                  <InputReadonly
+                    v-if="form.is_google_linked"
+                    id="email"
+                    name="email"
+                    :label="t('profile.form.email')"
+                    :modelValue="form.email"
+                    :placeholder="t('profile.form.emailPlaceholder')"
+                  />
                   <Input
+                    v-else
                     id="email"
                     name="email"
                     :label="t('profile.form.email')"
@@ -111,6 +120,12 @@
                     :form="form"
                     required
                   />
+                  <small
+                    class="text-xs text-gray-400"
+                    v-if="form.is_google_linked"
+                  >
+                    {{ t("profile.form.googleEmailLocked") }}
+                  </small>
                 </div>
 
                 <!-- Phone -->

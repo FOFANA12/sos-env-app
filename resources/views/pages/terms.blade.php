@@ -24,7 +24,7 @@
 
         <!-- Content -->
         <section class="py-10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
                 <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
                     <!-- Last Updated -->
                     <div class="bg-gray-50 px-8 py-4 border-b border-gray-200">

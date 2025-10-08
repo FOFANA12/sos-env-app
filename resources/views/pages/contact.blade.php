@@ -29,7 +29,7 @@
 
     <!-- Google Maps Section -->
     <section class="py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
             <div class="w-full h-96 md:h-[600px]">
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3792.2831296874156!2d-15.988041423903628!3d18.104711881743086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xe964d69c437f815%3A0x7ae01b1d2a087f57!2sStade%20olympique%20de%20Nouakchott!5e0!3m2!1sfr!2s!4v1759882103000!5m2!1sfr!2s"

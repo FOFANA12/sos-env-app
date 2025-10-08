@@ -302,6 +302,7 @@
             "accountActivity": "Activité du compte"
         },
         "form": {
+            "googleEmailLocked": "Cet e-mail est géré par Google et ne peut pas être modifié.",
             "name": "Nom complet",
             "namePlaceholder": "Entrez votre nom complet",
             "email": "Adresse email",
