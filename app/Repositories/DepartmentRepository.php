@@ -18,8 +18,8 @@ class DepartmentRepository
      */
     public function index(Request $request)
     {
-        $searchable = ['departments.name', 'region'];
-        $sortable = ['name', 'status', 'region'];
+        $searchable = ['name', 'region'];
+        $sortable = ['name', 'region', 'status'];
 
 
         $searchTerm = $request->input('searchTerm');
@@ -83,10 +83,8 @@ class DepartmentRepository
      */
     public function store(DepartmentRequest $request)
     {
-
         $request->merge([
             "status" => filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN),
-            "mode" => $request->input('mode', 'view'),
             "region_uuid" => $request->input('region'),
             "created_by" => Auth::user()?->uuid,
             "updated_by" => Auth::user()?->uuid,
@@ -100,6 +98,7 @@ class DepartmentRepository
             "updated_by",
         ]));
 
+        
         return new DepartmentResource($department);
     }
 

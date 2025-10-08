@@ -2,84 +2,123 @@
 
 namespace App\Repositories;
 
+use App\Helpers\FileHelper;
 use RuntimeException;
 use App\Models\Region;
 use App\Models\Report;
-use App\Models\Department;
-use App\Models\Neighborhood;
 use Illuminate\Http\Request;
-use App\Models\ReportCategory;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ReportRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ReportResource;
+use App\Models\Department;
+use App\Models\Neighborhood;
+use App\Support\ReportStatus;
+use App\Support\ReportViewMode;
 
 class ReportRepository
 {
+    protected string $basePath = 'uploads/reports';
+
     /**
      * List reports with pagination, filters, and sorting.
      */
     public function index(Request $request)
     {
-        $searchable = ['reports.title', 'reports.description', 'reports.address', 'region', 'report_category', 'department', 'neighborhood'];
-        $sortable = ['title', 'description', 'status', 'region', 'report_category', 'department', 'neighborhood'];
+        $searchable = ['title', 'region', 'department', 'neighborhood', 'author'];
+        $sortable = ['title', 'status', 'region', 'department', 'neighborhood', 'author'];
 
         $searchTerm = $request->input('searchTerm');
         $sortByInput = $request->input('sortBy');
         $sortOrderInput = strtolower($request->input('sortOrder', 'desc'));
         $perPage = $request->input('perPage');
 
+        $regionUuid = $request->input('region');
+        $departmentUuid = $request->input('department');
+        $neighborhoodUuid = $request->input('neighborhood');
+        $status = $request->input('status');
+        $viewMode = $request->input('view_mode', 'all'); // "all" | "mine"
+
         $sortOrder = in_array($sortOrderInput, ['asc', 'desc']) ? $sortOrderInput : 'desc';
         $sortBy = in_array($sortByInput, $sortable) ? $sortByInput : 'id';
 
-        $query = Report::select(
-            'reports.id',
-            'reports.uuid',
-            'reports.title',
-            'reports.address',
-            'reports.latitude',
-            'reports.longitude',
-            'reports.description',
-            'reports.status as status_code',
-            'regions.name as region',
-            'report_categories.name as category',
-            'departments.name as department',
-            'neighborhoods.name as neighborhood',
-        )
+        $user = $request->user();
+        $isAdmin = $user && strcasecmp($user->role, 'admin') === 0;
+
+        $query = Report::query()
+            ->leftJoin('users', 'reports.created_by', '=', 'users.uuid')
             ->join('regions', 'reports.region_uuid', '=', 'regions.uuid')
-            ->join('report_categories', 'reports.category_uuid', '=', 'report_categories.uuid')
             ->join('departments', 'reports.department_uuid', '=', 'departments.uuid')
-            ->join('neighborhoods', 'reports.neighborhood_uuid', '=', 'neighborhoods.uuid');
+            ->join('neighborhoods', 'reports.neighborhood_uuid', '=', 'neighborhoods.uuid')
+            ->select(
+                'reports.id',
+                'reports.uuid',
+                'reports.title',
+                'reports.description',
+                'reports.created_at',
+                'reports.status',
+                'regions.name as region',
+                'departments.name as department',
+                'neighborhoods.name as neighborhood',
+                'users.name as user'
+            );
 
         if (!empty($searchTerm)) {
             $query->where(function ($q) use ($searchTerm, $searchable) {
                 foreach ($searchable as $column) {
                     if ($column === 'region') {
                         $q->orWhere('regions.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
-                    } else if ($column === 'category') {
-                        $q->orWhere('report_categories.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
                     } else if ($column === 'department') {
                         $q->orWhere('departments.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
+                    } else if ($column === 'author') {
+                        $q->orWhere('users.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
                     } else if ($column === 'neighborhood') {
                         $q->orWhere('neighborhoods.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
                     } else {
-                        $q->orWhere($column, 'LIKE', '%' . strtolower($searchTerm) . '%');
+                        $q->orWhere("reports.$column", 'LIKE', '%' . strtolower($searchTerm) . '%');
                     }
                 }
             });
         }
 
+        if ($regionUuid) {
+            $query->where('reports.region_uuid', $regionUuid);
+        }
+        if ($departmentUuid) {
+            $query->where('reports.department_uuid', $departmentUuid);
+        }
+        if ($neighborhoodUuid) {
+            $query->where('reports.neighborhood_uuid', $neighborhoodUuid);
+        }
+        if ($status) {
+            $query->where('reports.status', $status);
+        }
+
+        if ($viewMode === 'mine' && $user) {
+            $query->where('reports.created_by', $user->uuid);
+        } else {
+            if (!$isAdmin) {
+                $query->where(function ($q) use ($user) {
+                    $q->where('reports.status', '!=', 'rejected');
+
+                    if ($user) {
+                        $q->orWhere(function ($qq) use ($user) {
+                            $qq->where('reports.status', 'rejected')
+                                ->where('reports.created_by', $user->uuid);
+                        });
+                    }
+                });
+            }
+        }
+
         if ($sortBy === 'region') {
             $query->orderBy('regions.name', $sortOrder);
-        }
-        if ($sortBy === 'category') {
-            $query->orderBy('report_categories.name', $sortOrder);
-        }
-        if ($sortBy === 'department') {
+        } else if ($sortBy === 'department') {
             $query->orderBy('departments.name', $sortOrder);
-        }
-        if ($sortBy === 'neighborhood') {
+        } else if ($sortBy === 'neighborhood') {
             $query->orderBy('neighborhoods.name', $sortOrder);
+        } else if ($sortBy === 'author') {
+            $query->orderBy('users.name', $sortOrder);
         } else {
             $query->orderBy("reports.$sortBy", $sortOrder);
         }
@@ -95,6 +134,9 @@ class ReportRepository
      */
     public function requirements()
     {
+        $user = Auth::user();
+        $locale = app()->getLocale();
+
         $regions = Region::where('status', true)
             ->orderBy('id', 'desc')
             ->select('uuid', 'name')
@@ -102,23 +144,50 @@ class ReportRepository
 
         $departments = Department::where('status', true)
             ->orderBy('id', 'desc')
-            ->select('uuid', 'name')
-            ->get();
-        $reportCategories = ReportCategory::where('status', true)
-            ->orderBy('id', 'desc')
-            ->select('uuid', 'name')
-            ->get();
-        $neighborhoods = Neighborhood::where('status', true)
-            ->orderBy('id', 'desc')
-            ->select('uuid', 'name')
+            ->select('uuid', 'name', 'region_uuid')
             ->get();
 
-        return [
+        $neighborhoods = Neighborhood::where('status', true)
+            ->orderBy('id', 'desc')
+            ->select('uuid', 'name', 'region_uuid', 'department_uuid')
+            ->get();
+
+        $statuses = collect(ReportStatus::all())
+            ->filter(function ($status) use ($user) {
+                if (!$user) {
+                    return $status['code'] !== 'rejected';
+                }
+                return true;
+            })
+            ->map(function ($status) use ($locale) {
+                return [
+                    'code' => $status['code'],
+                    'name' => $status['name'][$locale] ?? $status['name']['fr'],
+                ];
+            })
+            ->values();
+
+        $data = [
             'regions' => $regions,
             'departments' => $departments,
-            'report_categories' => $reportCategories,
             'neighborhoods' => $neighborhoods,
+            'statuses' => $statuses,
         ];
+
+        if ($user) {
+            if ($user) {
+                $data['view_modes'] = collect(ReportViewMode::all())
+                    ->map(function ($item) use ($locale) {
+                        return [
+                            'code' => $item['code'],
+                            'name' => $item['name'][$locale] ?? $item['name']['fr'],
+                        ];
+                    })
+                    ->values();
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -126,42 +195,45 @@ class ReportRepository
      */
     public function store(ReportRequest $request)
     {
+        $user = Auth::user();
+        DB::beginTransaction();
 
-        $request->merge([
-            "is_public" => filter_var($request->input('is_public'), FILTER_VALIDATE_BOOLEAN),
-            "mode" => $request->input('mode', 'view'),
-            "region_uuid" => $request->input('region'),
-            "category_uuid" => $request->input('category'),
-            "department_uuid" => $request->input('department'),
-            "neighborhood_uuid" => $request->input('neighborhood'),
-            "created_by" => Auth::user()?->uuid,
-            "updated_by" => Auth::user()?->uuid,
-            "published_at" => now(),
-            "status_changed_at" => now(),
-            "status_changed_by" => Auth::user()?->uuid,
-        ]);
+        try {
+            $data = [
+                "region_uuid" => $request->input('region'),
+                "department_uuid" => $request->input('department'),
+                "neighborhood_uuid" => $request->input('neighborhood'),
+                "title" => $request->input('title'),
+                "description" => $request->input('description'),
+                "created_by" => $user?->uuid,
+                "updated_by" => $user?->uuid,
+            ];
 
-        $report = Report::create($request->only([
-            "title",
-            "region_uuid",
-            "category_uuid",
-            "department_uuid",
-            "neighborhood_uuid",
-            "description",
-            "latitude",
-            "longitude",
-            "address",
-            "status",
-            "is_public",
-            "published_at",
-            "status_changed_at",
-            "status_changed_by",
-            "created_by",
-            "updated_by",
-        ]));
-        $report->load(['region', 'category', 'department', 'neighborhood']);
+            $location = $this->extractLocationData($request);
+            $data = array_merge($data, $location);
 
-        return new ReportResource($report);
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $data['image'] = FileHelper::upload($file, $this->basePath);
+            }
+
+            $report = Report::create($data);
+
+            if ($request->hasFile('photos')) {
+                $photos = $request->file('photos');
+                foreach ($photos as $photo) {
+                    FileHelper::upload($photo, "{$this->basePath}/{$report->uuid}/photos");
+                }
+            }
+
+            DB::commit();
+
+            $report->load(['region', 'department', 'neighborhood']);
+            return new ReportResource($report);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -177,36 +249,52 @@ class ReportRepository
      */
     public function update(ReportRequest $request, Report $report)
     {
-        $request->merge([
-            "is_public" => filter_var($request->input('is_public'), FILTER_VALIDATE_BOOLEAN),
-            "mode" => $request->input('mode', 'edit'),
-            "region_uuid" => $request->input('region'),
-            "category_uuid" => $request->input('category'),
-            "department_uuid" => $request->input('department'),
-            "neighborhood_uuid" => $request->input('neighborhood'),
-            "status_changed_at" => now(),
-            "status_changed_by" => Auth::user()?->uuid,
-            "updated_by" => Auth::user()?->uuid,
-        ]);
+        $user = Auth::user();
 
-        $report->fill($request->only([
-            "title",
-            "region_uuid",
-            "category_uuid",
-            "department_uuid",
-            "neighborhood_uuid",
-            "description",
-            "latitude",
-            "longitude",
-            "address",
-            "status",
-            "is_public",
-            "status_changed_at",
-            "status_changed_by",
-            "updated_by",
-        ]))->save();
+        DB::beginTransaction();
+        try {
+            $data = [
+                "region_uuid" => $request->input('region'),
+                "department_uuid" => $request->input('department'),
+                "neighborhood_uuid" => $request->input('neighborhood'),
+                "title" => $request->input('title'),
+                "description" => $request->input('description'),
+                "updated_by" => $user?->uuid,
+            ];
 
-        return new ReportResource($report);
+            $location = $this->extractLocationData($request);
+            $data = array_merge($data, $location);
+
+            if ($request->boolean('delete_image') && $report->image) {
+                FileHelper::delete("{$this->basePath}/{$report->image}");
+                $data['image'] = null;
+            }
+
+            if ($request->hasFile('image')) {
+                if ($report->image) {
+                    FileHelper::delete("{$this->basePath}/{$report->image}");
+                }
+                $file = $request->file('image');
+                $data['image'] = FileHelper::upload($file, $this->basePath);
+            }
+
+            $report->fill($data)->save();
+
+            if ($request->hasFile('photos')) {
+                $photos = $request->file('photos');
+                foreach ($photos as $photo) {
+                    FileHelper::upload($photo, "{$this->basePath}/{$report->uuid}/photos");
+                }
+            }
+
+            DB::commit();
+
+            $report->load(['region', 'department', 'neighborhood']);
+            return new ReportResource($report);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -235,5 +323,32 @@ class ReportRepository
                 throw new \Exception(__('app/common.repository.error'));
             }
         });
+    }
+
+    /**
+     * Extract location data from request.
+     */
+    protected function extractLocationData($request): array
+    {
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        $address = trim($request->input('address', ''));
+
+        $isLatValid = is_numeric($latitude) && $latitude >= -90 && $latitude <= 90;
+        $isLngValid = is_numeric($longitude) && $longitude >= -180 && $longitude <= 180;
+
+        if (!$isLatValid || !$isLngValid) {
+            return [
+                'address' => null,
+                'latitude' => null,
+                'longitude' => null,
+            ];
+        }
+
+        return [
+            'address' => $address !== '' ? $address : null,
+            'latitude' => (float) $latitude,
+            'longitude' => (float) $longitude,
+        ];
     }
 }

@@ -29,6 +29,7 @@ class NeighborhoodSeeder extends Seeder
             Neighborhood::create([
                 'name' => $neighborhood['name'],
                 'status' => true,
+                'region_uuid' => $department?->region_uuid,
                 'department_uuid' => $department?->uuid,
                 'created_by' => null,
                 'updated_by' => null,

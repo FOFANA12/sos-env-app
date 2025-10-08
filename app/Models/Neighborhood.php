@@ -26,12 +26,17 @@ class Neighborhood extends Model
         ];
     }
 
+    public function region(): BelongsTo
+    {
+        return $this->belongsTo(Region::class, 'region_uuid', 'uuid');
+    }
+
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_uuid', 'uuid');
     }
     
-    public function Reports(): HasMany
+    public function reports(): HasMany
     {
         return $this->hasMany(Report::class, 'neighborhood_uuid', 'uuid');
     }

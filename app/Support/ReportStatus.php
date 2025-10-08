@@ -10,7 +10,7 @@ class ReportStatus
     private static array $statuses = [
         [
             'code' => 'pending',
-            'color' => '#FFC107', 
+            'color' => '#FF9800',
             'name' => [
                 'fr' => 'En attente',
                 'en' => 'Pending',
@@ -18,26 +18,17 @@ class ReportStatus
             ],
         ],
         [
-            'code' => 'in_progress',
-            'color' => '#2196f3', 
+            'code' => 'resolved',
+            'color' => '#4CAF50',
             'name' => [
-                'fr' => 'En cours',
-                'en' => 'In progress',
-                'ar' => 'قيد التنفيذ',
-            ],
-        ],
-        [
-            'code' => 'completed',
-            'color' => '#4caf50', 
-            'name' => [
-                'fr' => 'Fait',
-                'en' => 'Completed',
-                'ar' => 'منجزة',
+                'fr' => 'Résolu',
+                'en' => 'Resolved',
+                'ar' => 'تم الحل',
             ],
         ],
         [
             'code' => 'rejected',
-            'color' => '#f44336',
+            'color' => '#F44336',
             'name' => [
                 'fr' => 'Rejeté',
                 'en' => 'Rejected',

@@ -1,11 +1,109 @@
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+@layer base {
+    :root {
+        --color-primary: #22c55e;
+    }
+
+    body {
+        @apply font-sans antialiased bg-gray-50;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply text-gray-900 font-semibold;
+    }
+}
+
+@layer components {
+    .required-star {
+        margin-inline-start: 0.1;
+        color: var(--color-error-500, #f04438);
+    }
+
+    .btn-primary {
+        @apply bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md;
+    }
+
+    .btn-secondary {
+        @apply bg-white text-primary-600 border border-primary-200 hover:border-primary-300 rounded-lg font-medium transition-all duration-200;
+    }
+}
+/* 
+.checkbox-primary {
+    @apply appearance-none border border-gray-300 rounded-sm relative transition;
+}
+
+.checkbox-primary:checked {
+    background-color: var(
+        --color-primary
+    );
+    border-color: var(--color-primary);
+}
+
+.checkbox-primary:checked::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%) rotate(45deg);
+    width: 40%;
+    height: 70%;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+}
+
+.checkbox-primary:checked:disabled {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    cursor: not-allowed !important;
+    opacity: 0.7 !important;
+} */
+
+.format-number {
+    font-family: Arial, sans-serif !important;
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.swal-compact {
+    @apply w-[500px] max-w-[90vw] p-5 rounded-lg;
+}
+
+/** Swal - Button base style **/
+.swal-btn-confirm,
+.swal-btn-cancel {
+    @apply px-3 py-2 text-sm font-semibold rounded-lg min-w-[100px] transition-colors duration-200;
+}
+
+/** Swal - Confirm button style **/
+.swal-btn-confirm {
+    background-color: var(--color-primary) !important;
+    color: #fff !important;
+}
+
+.swal-btn-confirm:hover {
+    background-color: #16a34a !important; /* équivalent hover: bg-green-600 */
+}
+
+/** Swal - Cancel button style **/
+.swal-btn-cancel {
+    @apply bg-red-500 text-white;
+}
+
+.swal-btn-cancel:hover {
+    @apply bg-red-600;
+}
+
+.swal2-actions {
+    gap: 1rem !important;
+    justify-content: center !important;
 }

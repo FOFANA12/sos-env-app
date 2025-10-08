@@ -7,15 +7,29 @@
         "dev": "vite"
     },
     "devDependencies": {
-        "@tailwindcss/vite": "^4.0.0",
-        "autoprefixer": "^10.4.21",
-        "axios": "^1.8.2",
-        "concurrently": "^9.0.1",
+        "axios": "^1.11.0",
+        "daisyui": "^5.0.54",
         "laravel-vite-plugin": "^2.0.0",
+        "lucide-vue-next": "^0.503.0",
+        "unplugin-auto-import": "^20.1.0"
+    },
+    "dependencies": {
+        "@fawmi/vue-google-maps": "^0.9.79",
+        "@headlessui/vue": "^1.7.23",
+        "@tanstack/vue-table": "^8.21.3",
+        "@vitejs/plugin-vue": "^6.0.1",
+        "autoprefixer": "^10.4.21",
+        "pinia": "^3.0.3",
         "postcss": "^8.5.6",
-        "tailwindcss": "^4.1.11",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.9.2",
-        "vite": "^7.0.4"
+        "sweetalert2": "11.4.8",
+        "tailwindcss": "^3.4.17",
+        "vform": "^2.1.2",
+        "vite": "^7.0.4",
+        "vue": "^3.5.18",
+        "vue-easy-lightbox": "^1.19.0",
+        "vue-i18n": "^11.1.11",
+        "vue-loading-overlay": "^6.0.6",
+        "vue-select": "^4.0.0-beta.6",
+        "ziggy-js": "^2.5.3"
     }
 }

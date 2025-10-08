@@ -28,6 +28,7 @@ class NeighborhoodResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'status' => $this->status,
+            'region' => $this->region,
             'department' => $this->department,
         ];
     }
@@ -38,6 +39,7 @@ class NeighborhoodResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'region' => $this->region_uuid,
             'department' => $this->department_uuid,
             'status' => $this->status,
         ];
@@ -49,7 +51,8 @@ class NeighborhoodResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'status' => $this->status,
-            'department' => $this->department ? $this->department->name : null,
+            'region' => $this->region->name,
+            'department' => $this->department->name,
         ];
     }
 }

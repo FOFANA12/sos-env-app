@@ -17,7 +17,7 @@ class RegionRepository
      */
     public function index(Request $request)
     {
-        $searchable = ['name', 'status'];
+        $searchable = ['name'];
         $sortable = ['name', 'status'];
 
         $searchTerm = $request->input('searchTerm');

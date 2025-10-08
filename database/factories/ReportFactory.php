@@ -34,7 +34,6 @@ class ReportFactory extends Factory
 
         return [
             'uuid' => $uuid,
-            'user_uuid' => $user->uuid,
             'category_uuid' => $category->uuid,
             'region_uuid' => $region->uuid,
             'department_uuid' => $department->uuid,

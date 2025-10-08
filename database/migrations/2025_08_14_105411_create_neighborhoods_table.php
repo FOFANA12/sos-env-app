@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('name', 100);
+            $table->uuid('region_uuid');
             $table->uuid('department_uuid');
             $table->boolean('status')->default(true);
             $table->timestamps();
@@ -23,6 +24,7 @@ return new class extends Migration
 
             $table->unique(['department_uuid', 'name']);
 
+            $table->foreign('region_uuid')->references('uuid')->on('regions')->onDelete('restrict');
             $table->foreign('department_uuid')->references('uuid')->on('departments')->onDelete('restrict');
             $table->foreign('created_by')->references('uuid')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('uuid')->on('users')->onDelete('set null');

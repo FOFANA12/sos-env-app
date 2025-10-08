@@ -1,0 +1,321 @@
+{
+    "common": {
+        "noImage": "Pas d'image",
+        "orContinueWith": "Ou continuez avec",
+        "searchPlaceholder": "Recherche...",
+        "notResultSelect": "Aucun résultat trouvé",
+        "datatable": {
+            "noDataAvailable": "Aucune donnée disponible",
+            "rowsPerPage": "Lignes par page",
+            "dropdownAll": "Tout",
+            "paginationInfo": "{from} - {to} sur {total}"
+        },
+        "buttons": {
+            "processing": "Traitement en cours...",
+            "create": "Créer",
+            "save": "Enregistrer",
+            "view": "Aperçu",
+            "edit": "Modifier",
+            "delete": "Supprimer",
+            "errorRetry": "Réessayer",
+            "cancel": "Annuler",
+            "close": "Fermer"
+        },
+        "table": {
+            "author": "Auteur",
+            "actions": "Action",
+            "status": {
+                "label": "Statut",
+                "active": "Actif",
+                "inactive": "Inactif"
+            }
+        },
+        "form": {
+            "status": "Statut actif"
+        },
+        "links": {
+            "backHome": "Retour à l'accueil",
+            "agreeNotice": "En vous connectant, vous acceptez nos",
+            "terms": "Conditions d’utilisation",
+            "privacy": "Politique de confidentialité",
+            "and": "et"
+        },
+        "errors": {
+            "loginFailed": "Échec de la connexion. Veuillez vérifier vos identifiants.",
+            "forgotPasswordFailed": "Échec de l'envoi du lien de réinitialisation. Veuillez vérifier votre adresse email.",
+            "resetPasswordFailed": "Impossible de réinitialiser le mot de passe. Veuillez vérifier vos informations et réessayer.",
+            "registerFailed": "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+        },
+        "avatar": {
+            "selectAvatar": "Choisir un avatar",
+            "deleteAvatar": "Supprimer l'avatar",
+            "avatarPreviewAlt": "Avatar",
+            "noAvatar": "Aucun avatar"
+        },
+        "sweetalert": {
+            "showConfirm": {
+                "title": "Êtes-vous sûr ?",
+                "message": "Cette action est irréversible.",
+                "confirmButtonText": "Oui, supprimer",
+                "cancelButtonText": "Annuler"
+            },
+            "showConfirmValidation": {
+                "title": "Confirmation",
+                "message": "Êtes-vous sûr de vouloir continuer ?",
+                "confirmButtonText": "Confirmer",
+                "cancelButtonText": "Annuler"
+            },
+            "showErrorModal": {
+                "title": "Erreur",
+                "message": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+                "confirmButtonText": "Fermer"
+            },
+            "actions": {
+                "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
+                "confirmDeleteSelected": "Êtes-vous sûr de vouloir supprimer les éléments sélectionnés ?"
+            }
+        }
+    },
+    "social": {
+        "or": "Ou continuez avec",
+        "googleLogin": "Continuer avec Google",
+        "googleRegister": "S'inscrire avec Google"
+    },
+    "menus": {
+        "logout": "Se déconnecter"
+    },
+    "user": {
+        "btnAdd": "Nouvel utilisateur",
+        "btnList": "Liste des utilisateurs",
+        "sections": {
+            "personal": "Informations personnelles",
+            "security": "Sécurité",
+            "accountActivity": "Activité du compte"
+        },
+        "form": {
+            "name": "Nom complet",
+            "namePlaceholder": "Entrez votre nom complet",
+            "email": "Adresse email",
+            "emailPlaceholder": "Entrez votre adresse email",
+            "phone": "Numéro de téléphone",
+            "phonePlaceholder": "Entrez votre numéro de téléphone",
+            "role": "Rôle",
+            "rolePlaceholder": "Sélectionnez un rôle",
+            "password": "Mot de passe",
+            "passwordPlaceholder": "Entrez le mot de passe",
+            "passwordConfirm": "Confirmation du mot de passe",
+            "passwordConfirmPlaceholder": "Confirmez le mot de passe",
+            "termsAcceptedAt": "Date d’acceptation des conditions",
+            "lastLoginAt": "Dernière connexion"
+        },
+        "table": {
+            "name": "Nom",
+            "email": "Email",
+            "phone": "Téléphone",
+            "createdAt": "Date de création"
+        }
+    },
+    "region": {
+        "btnAdd": "Nouvelle region",
+        "modalTitleCreation": "Création d'une region",
+        "modalTitleModification": "Modification d'une region",
+        "modalTitleOverview": "Aperçu d'une region",
+        "form": {
+            "name": "Nom",
+            "namePlaceholder": "Ex. : Brakna"
+        },
+        "table": {
+            "name": "Nom"
+        }
+    },
+    "department": {
+        "btnAdd": "Nouveau département",
+        "modalTitleCreation": "Création d’un département",
+        "modalTitleModification": "Modification d’un département",
+        "modalTitleOverview": "Aperçu d’un département",
+        "form": {
+            "name": "Nom",
+            "namePlaceholder": "Ex. : M'bagne",
+            "region": "Région",
+            "regionPlaceholder": "Sélectionner une région"
+        },
+        "table": {
+            "name": "Nom",
+            "region": "Région"
+        }
+    },
+    "neighborhood": {
+        "btnAdd": "Nouveau quartier",
+        "modalTitleCreation": "Création d'un quartier",
+        "modalTitleModification": "Modification d'un quartier",
+        "modalTitleOverview": "Aperçu d'un quartier",
+        "form": {
+            "name": "Nom",
+            "namePlaceholder": "Ex. : Sebkha",
+            "region": "Région concerné",
+            "regionPlaceholder": "Sélectionner une région",
+            "department": "Département concerné",
+            "departmentPlaceholder": "Sélectionner un département"
+        },
+        "table": {
+            "name": "Nom",
+            "department": "Département",
+            "region": "Region"
+        }
+    },
+    "report": {
+        "btnAdd": "Nouveau signalement",
+        "btnList": "Liste des signalements",
+        "labelUseMyLocation": "Ma position actuelle",
+        "labelResetMyLocation": "Réinitialiser ma position",
+
+        "sections": {
+            "info": "Informations du signalement",
+            "location": "Localisation",
+            "status": "Statut et suivi",
+            "additionalPhotos": "Photos supplémentaires"
+        },
+        "form": {
+            "title": "Titre",
+            "titlePlaceholder": "Entrez un titre pour le signalement",
+            "description": "Description",
+            "descriptionPlaceholder": "Décrivez le problème rencontré",
+            "region": "Région",
+            "regionPlaceholder": "Sélectionnez une région",
+            "department": "Département",
+            "departmentPlaceholder": "Sélectionnez un département",
+            "neighborhood": "Quartier",
+            "neighborhoodPlaceholder": "Sélectionnez un quartier",
+            "status": "Statut",
+            "statusPlaceholder": "Sélectionnez un statut",
+            "type": "Type",
+            "typePlaceholder": "Sélectionnez un type",
+            "priority": "Priorité",
+            "priorityPlaceholder": "Sélectionnez une priorité",
+            "createdAt": "Date de création",
+
+            "coverUploadText": "Cliquez pour ajouter une image de couverture",
+            "coverUploadHint": "Formats acceptés : JPG, PNG, taille maximale 5 Mo",
+            "addPhoto": "Ajouter une photo",
+            "photoHint": "Vous pouvez ajouter jusqu'à 3 photos supplémentaires pour illustrer les détails du signalement (facultatif).",
+
+            "location": "Localisation",
+            "locationLabel": "Localisation de l'incident",
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "geolocNotSupported": "La géolocalisation n'est pas supportée par votre navigateur.",
+            "geolocFailed": "Impossible d'obtenir votre position GPS."
+        },
+        "table": {
+            "title": "Titre",
+            "status": "Statut",
+            "type": "Type",
+            "region": "Région",
+            "department": "Département",
+            "neighborhood": "Quartier",
+            "priority": "Priorité",
+            "createdAt": "Date de création"
+        },
+        "panel": {
+            "title": "Filtres avancés",
+            "region": "Région",
+            "department": "Département",
+            "neighborhood": "Quartier",
+            "status": "Statut",
+            "viewMode": "Mode d'affichage",
+            "buttons": {
+                "apply": "Appliquer",
+                "clear": "Tout effacer"
+            }
+        }
+    },
+    "login": {
+        "title": "Connexion",
+        "subtitle": "Accédez à votre espace",
+        "noAccount": "Pas encore de compte ?",
+        "createAccount": "Créer un compte",
+        "form": {
+            "email": "Email",
+            "emailPlaceholder": "Entrez votre adresse e-mail",
+            "password": "Mot de passe",
+            "passwordPlaceholder": "Entrez votre mot de passe",
+            "remember": "Se souvenir de moi",
+            "forgotPasswordLink": "Mot de passe oublié ?",
+            "btnSubmit": "Connexion"
+        },
+        "failed": "Une erreur s'est produite lors de la connexion. Veuillez vérifier vos identifiants et réessayer."
+    },
+    "forgotPassword": {
+        "title": "Mot de passe oublié",
+        "subtitle": "Entrez votre adresse e-mail pour réinitialiser votre mot de passe",
+        "form": {
+            "email": "Email",
+            "emailPlaceholder": "Entrez votre adresse e-mail",
+            "btnSubmit": "Envoyer le lien",
+            "backToLogin": "Retour à la connexion",
+            "alreadyHaveAccount": "Déjà un compte ?",
+            "loginLink": "Connectez-vous"
+        }
+    },
+    "resetPassword": {
+        "title": "Réinitialisation du mot de passe",
+        "subtitle": "Veuillez saisir un nouveau mot de passe pour votre compte.",
+        "form": {
+            "password": "Nouveau mot de passe",
+            "passwordPlaceholder": "Entrez votre nouveau mot de passe",
+            "confirmPassword": "Confirmer le mot de passe",
+            "confirmPasswordPlaceholder": "Répétez le nouveau mot de passe",
+            "btnSubmit": "Réinitialiser"
+        }
+    },
+    "register": {
+        "title": "Créer un compte",
+        "subtitle": "Rejoignez notre communauté environnementale",
+        "sections": {
+            "personalInfo": "Informations personnelles",
+            "loginInfo": "Informations de connexion"
+        },
+        "form": {
+            "name": "Nom complet",
+            "namePlaceholder": "Entrez votre nom et prénom",
+            "phone": "Téléphone",
+            "phonePlaceholder": "Entrez votre numéro de téléphone",
+            "email": "Adresse e-mail",
+            "emailPlaceholder": "Entrez votre adresse e-mail",
+            "password": "Mot de passe",
+            "passwordPlaceholder": "Saisissez un mot de passe sécurisé",
+            "confirmPassword": "Confirmer le mot de passe",
+            "confirmPasswordPlaceholder": "Retapez le mot de passe",
+            "acceptTerms": "J’accepte les",
+            "termsLink": "Conditions d’utilisation",
+            "privacyLink": "Politique de confidentialité",
+            "and": "et la",
+            "btnSubmit": "Créer mon compte",
+            "alreadyHaveAccount": "Vous avez déjà un compte ?",
+            "loginLink": "Se connecter"
+        }
+    },
+    "profile": {
+        "sections": {
+            "personal": "Informations personnelles",
+            "security": "Sécurité",
+            "accountActivity": "Activité du compte"
+        },
+        "form": {
+            "name": "Nom complet",
+            "namePlaceholder": "Entrez votre nom complet",
+            "email": "Adresse email",
+            "emailPlaceholder": "Entrez votre adresse email",
+            "phone": "Numéro de téléphone",
+            "phonePlaceholder": "Entrez votre numéro de téléphone",
+            "role": "Rôle",
+            "rolePlaceholder": "Votre rôle attribué",
+            "password": "Mot de passe",
+            "passwordPlaceholder": "Entrez le mot de passe",
+            "passwordConfirm": "Confirmation du mot de passe",
+            "passwordConfirmPlaceholder": "Confirmez le mot de passe",
+            "termsAcceptedAt": "Date d’acceptation des conditions",
+            "lastLoginAt": "Dernière connexion"
+        }
+    }
+}

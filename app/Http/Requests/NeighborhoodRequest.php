@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Department;
 use App\Models\Neighborhood;
+use App\Models\Region;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,6 +34,7 @@ class NeighborhoodRequest extends FormRequest
                 Rule::unique(Neighborhood::tableName(), 'name')
                     ->where('department_uuid', $this->department)
             ],
+            'region' => 'bail|required|exists:' . Region::tableName() . ',uuid',
             'department' => 'bail|required|exists:' . Department::tableName() . ',uuid',
         ];
 
@@ -58,6 +60,7 @@ class NeighborhoodRequest extends FormRequest
         return [
             'name' => __('app/neighborhood.request.name'),
             'department' => __('app/neighborhood.request.department'),
+            'region' => __('app/neighborhood.request.region'),
         ];
     }
 }

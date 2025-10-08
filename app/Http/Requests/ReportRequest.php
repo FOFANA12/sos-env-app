@@ -2,13 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use App\Models\Region;
 use App\Models\Department;
 use App\Models\Neighborhood;
-use App\Support\ReportStatus;
-use App\Models\ReportCategory;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReportRequest extends FormRequest
@@ -29,31 +25,29 @@ class ReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => 'bail|nullable|exists:' . ReportCategory::tableName() . ',uuid',
-            'region' => 'bail|nullable|exists:' . Region::tableName() . ',uuid',
-            'department' => 'bail|nullable|exists:' . Department::tableName() . ',uuid',
-            'neighborhood' => 'bail|nullable|exists:' . Neighborhood::tableName() . ',uuid',
+            'region' => 'bail|required|exists:' . Region::tableName() . ',uuid',
+            'department' => 'bail|required|exists:' . Department::tableName() . ',uuid',
+            'neighborhood' => 'bail|required|exists:' . Neighborhood::tableName() . ',uuid',
             'title' => 'bail|required|string|max:150',
-            'description' => 'bail|nullable|string|max:1000',
-            'latitude' => 'bail|nullable|numeric',
-            'longitude' => 'bail|nullable|numeric',
-            'address' => 'bail|nullable|string|max:255',
-            'status' => ['bail', 'required', 'string', 'max:20', Rule::in(ReportStatus::codes())],
+            'description' => 'bail|required|string|max:1000',
+
+            'image' => 'bail|required|image|mimes:jpeg,png,jpg|max:10240',
+
+            'photos' => 'bail|nullable|array|max:3',
+            'photos.*' => 'bail|file|image|mimes:jpeg,png,jpg|max:10240',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'category' => __('app/report.request.category'),
             'region' => __('app/report.request.region'),
             'department' => __('app/report.request.department'),
             'neighborhood' => __('app/report.request.neighborhood'),
             'title' => __('app/report.request.title'),
             'description' => __('app/report.request.description'),
-            'latitude' => __('app/report.request.latitude'),
-            'longitude' => __('app/report.request.longitude'),
-            'address' => __('app/report.request.address'),
+            'image' => __('app/report.request.image'),
+            'photos' => __('app/report.request.photos'),
         ];
     }
 }

@@ -65,8 +65,8 @@ class RegionController extends Controller
      */
     public function update(RegionRequest $request, Region $region)
     {
-        $region = $this->repository->update($request, $region);
-        return response()->json(['message' => $this->messageSuccessUpdated, 'region' => $region])->setStatusCode(Response::HTTP_OK);
+        $updatedRegion = $this->repository->update($request, $region);
+        return response()->json(['message' => $this->messageSuccessUpdated, 'region' => $updatedRegion])->setStatusCode(Response::HTTP_OK);
     }
 
     /**

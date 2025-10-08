@@ -11,11 +11,13 @@ use App\Traits\HasStaticTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, AutoFillable, GeneratesUuid, HasStaticTableName, Author;
+    protected $appends = ['avatar_url'];
 
     /**
      * The attributes that are mass assignable.
@@ -48,5 +50,18 @@ class User extends Authenticatable
             'password' => 'hashed',
             'status' => 'boolean',
         ];
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        if (config('filesystems.default') === 's3') {
+            return Storage::disk('s3')->temporaryUrl("uploads/avatars/{$this->avatar}", now()->addHour());
+        }
+
+        return Storage::disk('public')->url("uploads/avatars/{$this->avatar}");
     }
 }

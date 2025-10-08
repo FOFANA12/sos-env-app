@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name', 100);
+            $table->string('name', 100)->nullable();
             $table->string('email', 150)->unique();
             $table->string('password', 255)->nullable();
             $table->string('google_id', 100)->nullable();
@@ -24,8 +24,9 @@ return new class extends Migration
             $table->string('role', 20);
             $table->string('signup_method', 20);
             $table->boolean('status')->default(true);
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->nullable()->useCurrent();
             $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('terms_accepted_at');
             $table->rememberToken();
             $table->timestamps();
         });

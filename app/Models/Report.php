@@ -37,11 +37,6 @@ class Report extends Model
         return $this->belongsTo(Department::class, 'department_uuid', 'uuid');
     }
 
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(ReportCategory::class, 'category_uuid', 'uuid');
-    }
-
     public function neighborhood(): BelongsTo
     {
         return $this->belongsTo(Neighborhood::class, 'neighborhood_uuid', 'uuid');

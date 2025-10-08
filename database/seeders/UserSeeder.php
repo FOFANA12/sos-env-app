@@ -25,17 +25,19 @@ class UserSeeder extends Seeder
             'status' => true,
             'lang' => 'fr',
             'role' => 'admin',
-            'signup_method' => 'manual',
+            'signup_method' => 'email',
             'email_verified_at' => now(),
+            'terms_accepted_at' => now(),
         ]);
 
         User::factory()
             ->count(5)
             ->state([
-                'role' => 'public_user',
-                'signup_method' => 'manual',
+                'role' => 'user',
+                'signup_method' => 'email',
                 'status' => true,
                 'email_verified_at' => now(),
+                'terms_accepted_at' => now(),
             ])
             ->create();
 
@@ -50,9 +52,10 @@ class UserSeeder extends Seeder
                     'password' => $canLogin ? Hash::make('password') : null,
                     'status' => true,
                     'lang' => 'fr',
-                    'role' => 'internal_user',
-                    'signup_method' => 'admin_created',
-                    'email_verified_at' => $canLogin ? now() : null,
+                    'role' => 'user',
+                    'signup_method' => 'email',
+                    'email_verified_at' => now(),
+                    'terms_accepted_at' => now(),
                 ];
             })
             ->create();

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\NeighborhoodRequest;
 use App\Http\Resources\NeighborhoodResource;
+use App\Models\Region;
 
 class NeighborhoodRepository
 {
@@ -18,9 +19,8 @@ class NeighborhoodRepository
      */
     public function index(Request $request)
     {
-        $searchable = ['neighborhoods.name', 'department'];
-        $sortable = ['name', 'status', 'department'];
-
+        $searchable = ['name', 'region', 'department'];
+        $sortable = ['name', 'region', 'department', 'status'];
 
         $searchTerm = $request->input('searchTerm');
         $sortByInput = $request->input('sortBy');
@@ -36,16 +36,20 @@ class NeighborhoodRepository
             'neighborhoods.name',
             'neighborhoods.status',
             'departments.name as department',
+            'regions.name as region',
         )
-            ->join('departments', 'neighborhoods.department_uuid', '=', 'departments.uuid');
+            ->join('departments', 'neighborhoods.department_uuid', '=', 'departments.uuid')
+            ->join('regions', 'neighborhoods.region_uuid', '=', 'regions.uuid');
 
         if (!empty($searchTerm)) {
             $query->where(function ($q) use ($searchTerm, $searchable) {
                 foreach ($searchable as $column) {
                     if ($column === 'department') {
                         $q->orWhere('departments.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
+                    } else if ($column === 'region') {
+                        $q->orWhere('regions.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
                     } else {
-                        $q->orWhere($column, 'LIKE', '%' . strtolower($searchTerm) . '%');
+                        $q->orWhere("neighborhoods.$column", 'LIKE', '%' . strtolower($searchTerm) . '%');
                     }
                 }
             });
@@ -53,6 +57,8 @@ class NeighborhoodRepository
 
         if ($sortBy === 'department') {
             $query->orderBy('departments.name', $sortOrder);
+        } else if ($sortBy === 'region') {
+            $query->orderBy('regions.name', $sortOrder);
         } else {
             $query->orderBy("neighborhoods.$sortBy", $sortOrder);
         }
@@ -68,13 +74,18 @@ class NeighborhoodRepository
      */
     public function requirements()
     {
-        $departments = Department::where('status', true)
+        $regions = Region::with(
+            ['departments' => function ($query) {
+                $query->where('status', true)->select('uuid', 'name', 'region_uuid');
+            }]
+        )
+            ->where('status', true)
             ->orderBy('id', 'desc')
             ->select('uuid', 'name')
             ->get();
 
         return [
-            'departments' => $departments,
+            'regions' => $regions,
         ];
     }
 
@@ -86,8 +97,8 @@ class NeighborhoodRepository
 
         $request->merge([
             "status" => filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN),
-            "mode" => $request->input('mode', 'view'),
             "department_uuid" => $request->input('department'),
+            "region_uuid" => $request->input('region'),
             "created_by" => Auth::user()?->uuid,
             "updated_by" => Auth::user()?->uuid,
         ]);
@@ -95,6 +106,7 @@ class NeighborhoodRepository
         $neighborhood = Neighborhood::create($request->only([
             "name",
             "department_uuid",
+            "region_uuid",
             "status",
             "created_by",
             "updated_by",
@@ -118,14 +130,15 @@ class NeighborhoodRepository
     {
         $request->merge([
             "status" => filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN),
-            "mode" => $request->input('mode', 'edit'),
             "department_uuid" => $request->input('department'),
+            "region_uuid" => $request->input('region'),
             "updated_by" => Auth::user()?->uuid,
         ]);
 
         $neighborhood->fill($request->only([
             'name',
             'department_uuid',
+            'region_uuid',
             'status',
             'updated_by',
         ]))->save();

@@ -14,26 +14,47 @@ class Localization
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $supportedLocales = explode(',', env('SUPPORTED_LOCALES', 'en,fr,ar'));
-        $defaultLocale = env('APP_LOCALE', 'en');
+        $supportedLocales = array_map('trim', explode(',', env('SUPPORTED_LOCALES', 'en,fr,ar')));
+        $defaultLocale    = config('app.locale', 'en');
 
-        $locale = $request->query('locale');
-        if (! $locale) {
-            $acceptLang = $request->header('Accept-Language');
-            $locale = $this->normalizeLocale($acceptLang);
+        $locale = null;
+
+        // 1. Paramètre d'URL (?locale=fr)
+        if ($request->has('locale')) {
+            $locale = $this->normalizeLocale($request->query('locale'));
+
+            if ($request->hasSession()) {
+                $request->session()->put('locale', $locale);
+            }
         }
 
-        if ($locale && in_array($locale, $supportedLocales)) {
-            $this->setLocale($locale);
-        } else {
-            $this->setLocale($defaultLocale);
+        // 2. Session (si utilisateur a déjà choisi une langue sur le Web)
+        elseif ($request->hasSession() && $request->session()->has('locale')) {
+            $locale = $request->session()->get('locale');
         }
+
+        // 3. En-tête custom X-Locale (utile pour mobile)
+        elseif ($request->hasHeader('X-Locale')) {
+            $locale = $this->normalizeLocale($request->header('X-Locale'));
+        }
+
+        // 4. En-tête standard Accept-Language
+        elseif ($request->hasHeader('Accept-Language')) {
+            $locale = $this->normalizeLocale($request->header('Accept-Language'));
+        }
+
+        // 5. Fallback (par défaut si rien n’est trouvé ou langue non supportée)
+        if (! $locale || ! in_array($locale, $supportedLocales, true)) {
+            $locale = $defaultLocale;
+        }
+
+        $this->setLocale($locale);
 
         return $next($request);
     }
 
     /**
-     * Normalize locale string (e.g., "en-US" => "en")
+     * Normalize locale string (e.g., "fr-FR" => "fr")
      */
     protected function normalizeLocale(?string $locale): ?string
     {
@@ -41,8 +62,7 @@ class Localization
             return null;
         }
 
-        // Extract the primary language code from the header
-        return strtolower(substr($locale, 0, 2));
+        return strtolower(substr(trim($locale), 0, 2));
     }
 
     /**
@@ -51,7 +71,7 @@ class Localization
     protected function setLocale(string $locale): void
     {
         app()->setLocale($locale);
-        setlocale(LC_ALL, $locale);
+        @setlocale(LC_ALL, $locale);
         Carbon::setLocale($locale);
     }
 }
