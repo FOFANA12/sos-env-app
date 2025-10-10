@@ -150,6 +150,7 @@ class UserRepository
                 'email',
                 'phone',
                 'role',
+                'password',
             ]);
 
             $userData['status'] = filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN);

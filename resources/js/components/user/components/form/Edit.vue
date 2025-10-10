@@ -115,6 +115,7 @@
                 :placeholder="t('user.form.phonePlaceholder')"
                 :error="form.errors.get('phone')"
                 :form="form"
+                required
               />
             </div>
 

@@ -45,7 +45,7 @@ class DepartmentRepository
                     if ($column === 'region') {
                         $q->orWhere('regions.name', 'LIKE', '%' . strtolower($searchTerm) . '%');
                     } else {
-                        $q->orWhere($column, 'LIKE', '%' . strtolower($searchTerm) . '%');
+                        $q->orWhere("departments.$column", 'LIKE', '%' . strtolower($searchTerm) . '%');
                     }
                 }
             });
@@ -98,7 +98,7 @@ class DepartmentRepository
             "updated_by",
         ]));
 
-        
+
         return new DepartmentResource($department);
     }
 
