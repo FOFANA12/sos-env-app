@@ -10,6 +10,7 @@ use App\Support\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use RuntimeException;
 
 class UserRepository
@@ -41,7 +42,7 @@ class UserRepository
             'status',
             'created_at',
         )
-         ->where('users.id', '<>', Auth::id());
+            ->where('users.id', '<>', Auth::id());
 
         if (!empty($searchTerm)) {
             $query->where(function ($q) use ($searchTerm, $searchable) {
@@ -91,8 +92,12 @@ class UserRepository
                 'email',
                 'phone',
                 'role',
+                'password'
             ]);
 
+            if (!empty($userData['password'])) {
+                $userData['password'] = Hash::make($userData['password']);
+            }
 
             $userData['created_by'] = Auth::user()?->uuid;
             $userData['updated_by'] = Auth::user()?->uuid;
@@ -139,11 +144,6 @@ class UserRepository
 
         DB::beginTransaction();
         try {
-            $authUser = Auth::user();
-
-            $request->merge([
-                'status' => filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN),
-            ]);
 
             $userData = $request->only([
                 'name',
@@ -154,8 +154,15 @@ class UserRepository
 
             $userData['status'] = filter_var($request->input('status'), FILTER_VALIDATE_BOOLEAN);
             $userData['updated_by'] = Auth::user()?->uuid;
-            $userData['signup_method'] = "email";
             if (!$user->terms_accepted_at) $userData['terms_accepted_at'] = now();
+
+            if ($user->signup_method === 'google' || $user->google_id) {
+                unset($userData['email']);
+            }
+
+            if ($request->filled('password') && $user->signup_method !== 'google') {
+                $userData['password'] = Hash::make($userData['password']);
+            }
 
             if ($request->boolean('delete_avatar') && $oldAvatarName) {
                 FileHelper::delete("{$this->basePath}/{$oldAvatarName}");

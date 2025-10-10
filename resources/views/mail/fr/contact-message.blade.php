@@ -4,6 +4,9 @@
 <x-mail::panel>
 **Nom :** {{ $data['full_name'] }}  
 **Email :** {{ $data['email'] }}  
+@if (isset($data['phone']))
+**Téléphone :** {{ $data['phone'] }}  
+@endif
 **Sujet :** {{ $data['subject'] }}
 </x-mail::panel>
 

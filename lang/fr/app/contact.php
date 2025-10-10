@@ -40,6 +40,7 @@ return [
     'request' => [
         'full_name' => 'nom complet',
         'email' => 'email',
+        'phone' => 'téléphone',
         'subject' => 'sujet',
         'message' => 'message',
     ]

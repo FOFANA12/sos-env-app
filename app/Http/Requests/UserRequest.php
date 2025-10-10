@@ -41,10 +41,20 @@ class UserRequest extends FormRequest
         if ($this->isMethod('put')) {
             $user = $this->route('user');
             $rules += [
-                'email' => 'bail|required|email|max:150|unique:' . User::tableName() . ',email,' . $user->id,
                 'phone' => 'bail|required|string|max:20|unique:' . User::tableName() . ',phone,' . $user->id,
-                'password' => 'bail|nullable|min:6|confirmed',
             ];
+
+            if (is_null($user?->google_id) && $user?->signup_method !== 'google') {
+                $rules += [
+                    'email' => 'bail|required|email|max:150|unique:' . User::tableName() . ',email,' . $user->id,
+                ];
+            }
+
+            if ($user->signup_method !== 'google') {
+                $rules += [
+                    'password' => 'bail|nullable|min:6|confirmed',
+                ];
+            }
         } else {
             $rules += [
                 'email' => 'bail|required|email|max:150|unique:' . User::tableName() . ',email',

@@ -68,7 +68,7 @@ const {
 const onSubmit = async () => {
   try {
     const result = await store.create();
-    showSimpleAlerte({ icon: "success", text: "Demo test", timer: 6000 }).then(
+    showSimpleAlerte({ icon: "success", text: result.message, timer: 6000 }).then(
     () => {
       window.location.href = route("users.index");
     }
