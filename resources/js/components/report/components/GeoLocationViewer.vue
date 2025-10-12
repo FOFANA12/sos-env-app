@@ -1,35 +1,10 @@
 <template>
   <div class="w-full flex flex-col gap-3">
     <!-- === HEADER === -->
-    <div class="flex justify-between items-center">
+    <div class="flex items-center">
       <label class="font-medium text-gray-800">
         {{ label }}
       </label>
-
-      <div class="flex items-center gap-3">
-        <!-- Reset -->
-        <button
-          v-if="marker"
-          type="button"
-          @click="resetLocation"
-          class="text-sm text-red-600 hover:text-red-700 flex items-center gap-1"
-          :disabled="loading"
-        >
-          <Trash class="w-4 h-4" />
-          {{ t("report.maps.labelResetMyLocation") }}
-        </button>
-
-        <!-- Use my location -->
-        <button
-          type="button"
-          @click="useMyLocation"
-          :disabled="loading"
-          class="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1 disabled:opacity-60"
-        >
-          <MapPin class="w-4 h-4" />
-          {{ t("report.maps.labelUseMyLocation") }}
-        </button>
-      </div>
     </div>
 
     <!-- === GOOGLE MAP === -->
@@ -56,7 +31,6 @@
         :center="center"
         :zoom="zoom"
         style="width: 100%; height: 480px"
-        @click="handleMapClick"
         :options="{
           streetViewControl: false,
           mapTypeControl: true,
@@ -97,8 +71,6 @@
 </template>
 
 <script setup>
-import { MapPin, Trash } from "lucide-vue-next";
-
 const props = defineProps({
   modelValue: {
     type: Object,
@@ -110,7 +82,6 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue"]);
 
 const zoom = ref(15);
 const center = ref({ lat: 18.0735, lng: -15.9582 });
@@ -140,7 +111,6 @@ const updatePosition = (lat, lng, shouldCenter = false) => {
   marker.value = { lat, lng };
   internalLat.value = lat;
   internalLng.value = lng;
-  emit("update:modelValue", { lat, lng });
 
   if (shouldCenter && mapRef.value?.$mapObject) {
     nextTick(() => {
@@ -149,49 +119,6 @@ const updatePosition = (lat, lng, shouldCenter = false) => {
   }
 };
 
-/**
- * Handle map click → move marker and recenter
- */
-const handleMapClick = (e) => {
-  updatePosition(e.latLng.lat(), e.latLng.lng(), true);
-};
-
-/**
- * Get user's current location
- */
-const useMyLocation = () => {
-  if (!navigator.geolocation) {
-    alert("Geolocation is not supported by your browser.");
-    return;
-  }
-
-  loading.value = true;
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-      updatePosition(latitude, longitude, true);
-      loading.value = false;
-    },
-    (err) => {
-      console.warn(err);
-      alert(
-        "Unable to retrieve your current location. Please check your browser permissions."
-      );
-      loading.value = false;
-    },
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
-};
-
-/**
- * Reset marker position
- */
-const resetLocation = () => {
-  marker.value = null;
-  internalLat.value = null;
-  internalLng.value = null;
-  emit("update:modelValue", { lat: null, lng: null });
-};
 
 /**
  * Sync external model changes

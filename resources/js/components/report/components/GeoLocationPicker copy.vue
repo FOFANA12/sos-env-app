@@ -3,7 +3,7 @@
     <!-- === HEADER === -->
     <div class="flex justify-between items-center">
       <label class="font-medium text-gray-800">
-        {{ label }}
+        {{ label || "Localisation" }}
       </label>
 
       <div class="flex items-center gap-3">
@@ -16,7 +16,7 @@
           :disabled="loading"
         >
           <Trash class="w-4 h-4" />
-          {{ t("report.maps.labelResetMyLocation") }}
+          Réinitialiser
         </button>
 
         <!-- Use my location -->
@@ -27,7 +27,7 @@
           class="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1 disabled:opacity-60"
         >
           <MapPin class="w-4 h-4" />
-          {{ t("report.maps.labelUseMyLocation") }}
+          Ma position
         </button>
       </div>
     </div>
@@ -39,15 +39,9 @@
         v-if="!mapLoaded"
         class="w-full h-[480px] flex flex-col items-center justify-center bg-gray-50"
       >
-        <div
-          class="animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent mb-4"
-        ></div>
-        <p class="text-gray-600 font-medium">
-          {{ t("report.maps.loadingText") }}
-        </p>
-        <p class="text-sm text-gray-500 mt-2">
-          {{ t("report.maps.loadingPleaseWait") }}
-        </p>
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent mb-4"></div>
+        <p class="text-gray-600 font-medium">Chargement de la carte...</p>
+        <p class="text-sm text-gray-500 mt-2">Veuillez patienter un instant</p>
       </div>
 
       <GMapMap
@@ -81,13 +75,13 @@
     <!-- === COORDINATES === -->
     <div class="grid grid-cols-2 gap-4 text-xs mt-1">
       <div>
-        <span class="text-gray-500">{{ t('report.maps.latitude') }}</span>
+        <span class="text-gray-500">Latitude</span>
         <p class="text-gray-800 font-medium">
           {{ internalLat ? internalLat.toFixed(5) : "—" }}
         </p>
       </div>
       <div>
-        <span class="text-gray-500">{{ t('report.maps.longitude') }}</span>
+        <span class="text-gray-500">Longitude</span>
         <p class="text-gray-800 font-medium">
           {{ internalLng ? internalLng.toFixed(5) : "—" }}
         </p>
@@ -98,6 +92,7 @@
 
 <script setup>
 import { MapPin, Trash } from "lucide-vue-next";
+import { ref, watch, nextTick, onMounted } from "vue";
 
 const props = defineProps({
   modelValue: {
@@ -161,7 +156,7 @@ const handleMapClick = (e) => {
  */
 const useMyLocation = () => {
   if (!navigator.geolocation) {
-    alert("Geolocation is not supported by your browser.");
+    alert("La géolocalisation n'est pas supportée par votre navigateur");
     return;
   }
 
@@ -174,9 +169,7 @@ const useMyLocation = () => {
     },
     (err) => {
       console.warn(err);
-      alert(
-        "Unable to retrieve your current location. Please check your browser permissions."
-      );
+      alert("Impossible d'obtenir votre position. Veuillez vérifier les permissions.");
       loading.value = false;
     },
     { enableHighAccuracy: true, timeout: 10000 }
@@ -199,11 +192,7 @@ const resetLocation = () => {
 watch(
   () => props.modelValue,
   (val) => {
-    if (
-      !val ||
-      (val.lat === internalLat.value && val.lng === internalLng.value)
-    )
-      return;
+    if (!val || (val.lat === internalLat.value && val.lng === internalLng.value)) return;
     updatePosition(val.lat, val.lng, true);
   },
   { deep: true }

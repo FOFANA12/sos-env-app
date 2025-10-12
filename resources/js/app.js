@@ -50,6 +50,7 @@ import NeighborhoodIndex from "@/js/components/neighborhood/NeighborhoodIndex.vu
 // Report
 import ReportIndex from "@/js/components/report/ReportIndex.vue";
 import ReportCreate from "@/js/components/report/ReportCreate.vue";
+import ReportShow from "@/js/components/report/ReportShow.vue";
 
 // Loader global (avec teleport)
 import GlobalLoader from "@/js/components/ui/GlobalLoader.vue";
@@ -120,6 +121,7 @@ app.component("neighborhood-index", NeighborhoodIndex);
 // Report components
 app.component("report-index", ReportIndex);
 app.component("report-create", ReportCreate);
+app.component("report-show", ReportShow);
 
 // Monter l'application principale
 app.mount("#app");

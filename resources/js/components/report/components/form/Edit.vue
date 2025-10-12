@@ -78,6 +78,14 @@
     </div>
 
     <!-- === DETAIL IMAGES === -->
+    <Alert
+      v-if="alertStore.hasMessage"
+      :type="alertStore.message.type"
+      :message="alertStore.message.text"
+      @close="alertStore.resetMessage()"
+      class="my-4"
+    />
+
     <div class="bg-white rounded-lg mb-6">
       <div class="card-header flex items-center justify-between p-4 pt-2 pb-2">
         <h3 class="text-lg">
@@ -141,11 +149,11 @@
     </div>
 
     <!-- === LOCALISATION === -->
-    <div class="bg-white rounded-lg mb-6 p-4 shadow-sm">
+    <div class="bg-white rounded-lg mb-6 p-4">
       <GeoLocationPicker
-        ref="geoPicker"
+        ref="geoPickerRef"
         v-model="form.location"
-        :label="t('report.form.locationLabel')"
+        :label="t('report.sections.location')"
       />
     </div>
 
@@ -237,7 +245,7 @@
 
 <script setup>
 import { Trash, Image as ImageIcon, Plus, Eye } from "lucide-vue-next";
-import { useReportStore } from "@/js/store";
+import { useReportStore, useAlertStore } from "@/js/store";
 import { ref, computed, onMounted } from "vue";
 import VueEasyLightbox from "vue-easy-lightbox";
 import GeoLocationPicker from "../GeoLocationPicker.vue";
@@ -245,6 +253,7 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 const reportStore = useReportStore();
+const alertStore = useAlertStore();
 const form = reportStore.form;
 
 const imagePreview = computed(() => form.image_url);
@@ -254,7 +263,7 @@ const uploadMessage = ref("");
 const previewVisible = ref(false);
 const previewImages = ref([]);
 const previewIndex = ref(0);
-const geoPicker = ref(null);
+const geoPickerRef = ref(null);
 
 const props = defineProps({
   context: {
@@ -271,12 +280,12 @@ onMounted(() => {
         const { latitude, longitude } = pos.coords;
         form.location = { lat: latitude, lng: longitude };
 
-        if (geoPicker.value?.updatePosition) {
-          geoPicker.value.updatePosition(latitude, longitude);
+        if (geoPickerRef.value?.updatePosition) {
+          geoPickerRef.value.updatePosition(latitude, longitude, true);
         }
       },
       (err) => {
-        console.warn("Géolocalisation refusée ou impossible :", err);
+        console.warn("Geolocation request was denied or failed:", err);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );

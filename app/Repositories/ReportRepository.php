@@ -57,6 +57,7 @@ class ReportRepository
                 'reports.description',
                 'reports.created_at',
                 'reports.status',
+                'reports.image',
                 'regions.name as region',
                 'departments.name as department',
                 'neighborhoods.name as neighborhood',
@@ -212,26 +213,49 @@ class ReportRepository
             $location = $this->extractLocationData($request);
             $data = array_merge($data, $location);
 
+            $uploadedPhotoIds = [];
+            $uploadedImageId = null;
+
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $data['image'] = FileHelper::upload($file, $this->basePath);
+                $uploadedImageId = FileHelper::upload($file, $this->basePath);
+                $data['image'] = $uploadedImageId;
             }
 
             $report = Report::create($data);
 
             if ($request->hasFile('photos')) {
-                $photos = $request->file('photos');
-                foreach ($photos as $photo) {
-                    FileHelper::upload($photo, "{$this->basePath}/{$report->uuid}/photos");
+                foreach ($request->file('photos') as $photo) {
+                    $photoId = FileHelper::upload($photo, "{$this->basePath}/{$report->uuid}/photos");
+                    $uploadedPhotoIds[] = $photoId;
+
+                    $report->photos()->create([
+                        'identifier' => $photoId,
+                        'created_by' => $user?->uuid,
+                        'updated_by' => $user?->uuid,
+                    ]);
                 }
             }
 
             DB::commit();
 
-            $report->load(['region', 'department', 'neighborhood']);
+            $report->refresh();
+            $report->load(['region', 'department', 'neighborhood', 'photos']);
+            
             return new ReportResource($report);
         } catch (\Exception $e) {
             DB::rollBack();
+
+            if ($uploadedImageId) {
+                FileHelper::delete("{$this->basePath}/{$uploadedImageId}");
+            }
+
+            if (!empty($uploadedPhotoIds)) {
+                foreach ($uploadedPhotoIds as $photoId) {
+                    FileHelper::delete("{$this->basePath}/{$report->uuid}/photos/{$photoId}");
+                }
+            }
+
             throw $e;
         }
     }
@@ -307,22 +331,49 @@ class ReportRepository
         if (empty($ids) || !is_array($ids)) {
             throw new \InvalidArgumentException(__('app/common.destroy.invalid_ids'));
         }
-        DB::transaction(function () use ($ids) {
-            try {
-                $deleted = Report::whereIn('id', $ids)->delete();
-                if ($deleted === 0) {
-                    throw new \RuntimeException(__('app/common.destroy.no_items_deleted'));
-                }
-            } catch (RuntimeException $e) {
-                throw $e;
-            } catch (\Exception $e) {
-                if ($e->getCode() === "23000") {
-                    throw new \Exception(__('app/common.repository.foreignKey'));
+
+        $filesToDelete = [];
+
+        DB::beginTransaction();
+
+        try {
+            $reports = Report::whereIn('id', $ids)->with('photos')->get();
+
+            if ($reports->isEmpty()) {
+                throw new \RuntimeException(__('app/common.destroy.no_items_deleted'));
+            }
+
+            foreach ($reports as $report) {
+                if ($report->image) {
+                    $filesToDelete[] = "{$this->basePath}/{$report->image}";
                 }
 
-                throw new \Exception(__('app/common.repository.error'));
+                if ($report->photos && $report->photos->count() > 0) {
+                    foreach ($report->photos as $photo) {
+                        if ($photo->photo_identifier) {
+                            $filesToDelete[] = "{$this->basePath}/{$report->uuid}/photos/{$photo->identifier}";
+                        }
+                    }
+                }
+                $report->delete();
             }
-        });
+
+            DB::commit();
+
+            foreach ($filesToDelete as $file) {
+                FileHelper::delete($file);
+            }
+
+        } catch (RuntimeException $e) {
+            DB::rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($e->getCode() === "23000") {
+                throw new \Exception(__('app/common.repository.foreignKey'));
+            }
+            throw new \Exception(__('app/common.repository.error'));
+        }
     }
 
     /**
@@ -332,21 +383,18 @@ class ReportRepository
     {
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-        $address = trim($request->input('address', ''));
 
         $isLatValid = is_numeric($latitude) && $latitude >= -90 && $latitude <= 90;
         $isLngValid = is_numeric($longitude) && $longitude >= -180 && $longitude <= 180;
 
         if (!$isLatValid || !$isLngValid) {
             return [
-                'address' => null,
                 'latitude' => null,
                 'longitude' => null,
             ];
         }
 
         return [
-            'address' => $address !== '' ? $address : null,
             'latitude' => (float) $latitude,
             'longitude' => (float) $longitude,
         ];

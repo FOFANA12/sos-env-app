@@ -9,7 +9,7 @@
     <form @submit.prevent="onSubmit" @keydown="form.onKeydown($event)">
       <div class="flex justify-end gap-4 mb-6">
         <LinkButton
-          :href="route('users.create')"
+          :to="{ name: 'users.create' }"
           variant="primary"
           class="min-w-[130px]"
         >
@@ -30,7 +30,7 @@
         </LinkButton>
 
         <LinkButton
-          :href="route('users.edit', { user: userId })"
+          :to="{ name: 'users.edit', params: { user: userId } }"
           variant="primary"
           class="min-w-[130px]"
         >

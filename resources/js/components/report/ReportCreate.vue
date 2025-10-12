@@ -39,7 +39,7 @@
 import { Save } from "lucide-vue-next";
 import Form from "./components/form/Edit.vue";
 
-import { useReportStore } from "@/js/store";
+import { useReportStore, useAlertStore } from "@/js/store";
 import { useSwalAlerte } from "@/js/composables/useSwalAlerte";
 import { usePageState } from "@/js/composables/usePageState";
 import PageStateWrapper from "@/js/components/ui/PageStateWrapper.vue";
@@ -53,8 +53,11 @@ const props = defineProps({
 });
 
 const store = useReportStore();
+const alertStore = useAlertStore();
 const { showSimpleAlerte } = useSwalAlerte();
 const form = store.form;
+
+alertStore.resetMessage();
 store.resetForm();
 
 const {
@@ -68,8 +71,22 @@ const onSubmit = async () => {
   try {
     const result = await store.create();
     showSimpleAlerte({ icon: "success", text: result.message, timer: 6000 });
-    window.location.href = route("users.index");
-  } catch (_error) {}
+    window.location.href = route("reports.index");
+  } catch (error) {
+    const errors = error.errors || {};
+    
+    const photoErrorKey = Object.keys(errors).find(
+      (key) => key === "photos" || key.startsWith("photos.")
+    );
+
+    if (photoErrorKey) {
+      const firstError = Array.isArray(errors[photoErrorKey])
+        ? errors[photoErrorKey][0]
+        : errors[photoErrorKey];
+
+      alertStore.updateMessage("danger", firstError);
+    }
+  }
 };
 
 onMounted(async () => {

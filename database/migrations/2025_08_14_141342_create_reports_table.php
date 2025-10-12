@@ -21,10 +21,10 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
-            $table->text('address')->nullable();
             $table->string('status', 20)->default('pending');
             $table->dateTime('status_changed_at')->nullable();
             $table->uuid('status_changed_by')->nullable();
+            $table->string('image', 255)->nullable();
             $table->timestamps();
 
             $table->uuid('created_by')->nullable();

@@ -263,14 +263,14 @@ const resetPageAndRefresh = async (clearSearch = false) => {
   pagination.value.pageSize = store.meta.per_page;
 };
 
-const deleteReport = async (id) => {
+const deleteReport = async (ids) => {
   const confirmationMessage = t("common.sweetalert.actions.confirmDelete");
 
   const confirm = await showConfirm({ message: confirmationMessage });
 
   if (confirm.isConfirmed) {
     try {
-      const result = await store.destroy(id);
+      const result = await store.destroy(ids);
       showSimpleAlerte({ icon: "success", text: result.message });
       await resetPageAndRefresh(true);
       await fetchData();

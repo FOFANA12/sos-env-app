@@ -23,7 +23,8 @@ class Report extends Model
     protected function casts(): array
     {
         return [
-            'is_public' => 'boolean',
+            'latitude' => 'float',
+            'longitude' => 'float',
         ];
     }
 
@@ -42,8 +43,9 @@ class Report extends Model
         return $this->belongsTo(Neighborhood::class, 'neighborhood_uuid', 'uuid');
     }
 
-    public function reportPhotos(): HasMany
+    public function photos()
     {
-        return $this->hasMany(ReportPhoto::class, 'report_uuid', 'uuid');
+        return $this->hasMany(ReportPhoto::class, 'report_uuid', 'uuid')
+            ->orderBy('created_at', 'asc');
     }
 }

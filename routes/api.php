@@ -69,12 +69,6 @@ Route::prefix('neighborhoods')->controller(NeighborhoodController::class)->group
 });
 Route::apiResource('neighborhoods', NeighborhoodController::class)->only(['index', 'store', 'show', 'update']);
 
-// categories
-Route::prefix('report-categories')->controller(ReportCategoryController::class)->group(function () {
-    Route::post('destroy', 'destroy');
-});
-Route::apiResource('report-categories', ReportCategoryController::class)->only(['index', 'store', 'show', 'update']);
-
 // reports
 Route::prefix('reports')->controller(ReportController::class)->group(function () {
     Route::get('requirements', 'requirements');

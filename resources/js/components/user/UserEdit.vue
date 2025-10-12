@@ -9,7 +9,7 @@
     <form @submit.prevent="onSubmit" @keydown="form.onKeydown($event)">
       <div class="flex justify-end mb-6 gap-4">
         <LinkButton
-          :href="route('users.show', { user: userId })"
+          :to="{ name: 'users.show', params: { user: userId } }"
           variant="primary"
           customClass="min-w-[130px]"
         >

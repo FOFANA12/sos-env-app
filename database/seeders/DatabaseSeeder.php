@@ -28,7 +28,6 @@ class DatabaseSeeder extends Seeder
                 RegionSeeder::class,
                 DepartmentSeeder::class , 
                 NeighborhoodSeeder::class,
-                ReportCategorySeeder::class,
                 ReportSeeder::class,
             ]
         );

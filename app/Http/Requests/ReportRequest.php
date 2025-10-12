@@ -38,9 +38,20 @@ class ReportRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    public function messages(): array
     {
         return [
+            'photos.max' => __('app/report.request.photos_max'),
+            'photos.*.file' => __('app/report.request.photos_file'),
+            'photos.*.image' => __('app/report.request.photos_image'),
+            'photos.*.mimes' => __('app/report.request.photos_mimes'),
+            'photos.*.max' => __('app/report.request.photos_max_size'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        $attributes = [
             'region' => __('app/report.request.region'),
             'department' => __('app/report.request.department'),
             'neighborhood' => __('app/report.request.neighborhood'),
@@ -49,5 +60,14 @@ class ReportRequest extends FormRequest
             'image' => __('app/report.request.image'),
             'photos' => __('app/report.request.photos'),
         ];
+        
+        if (is_array($this->photos)) {
+            foreach (array_keys($this->photos) as $i) {
+                $n = $i + 1;
+                $attributes["photos.$i"] = __('app/report.request.photo_item', ['number' => $n]);
+            }
+        }
+
+        return $attributes;
     }
 }

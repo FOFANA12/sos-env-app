@@ -166,8 +166,20 @@
     "report": {
         "btnAdd": "Nouveau signalement",
         "btnList": "Liste des signalements",
-        "labelUseMyLocation": "Ma position actuelle",
-        "labelResetMyLocation": "Réinitialiser ma position",
+        "imageAlt": "Image de couverture du signalement",
+        "noAdditionalPhotos": "Pas de photos",
+        "maps": {
+            "labelUseMyLocation": "Ma position actuelle",
+            "labelResetMyLocation": "Réinitialiser ma position",
+
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+
+            "loadingText": "Chargement de la carte en cours...",
+            "loadingPleaseWait": "Veuillez patienter un instant",
+            "failed": "Impossible d'obtenir votre position actuelle.",
+            "notSupported": "Votre navigateur ne supporte pas la géolocalisation."
+        },
 
         "sections": {
             "info": "Informations du signalement",
@@ -197,14 +209,7 @@
             "coverUploadText": "Cliquez pour ajouter une image de couverture",
             "coverUploadHint": "Formats acceptés : JPG, PNG, taille maximale 5 Mo",
             "addPhoto": "Ajouter une photo",
-            "photoHint": "Vous pouvez ajouter jusqu'à 3 photos supplémentaires pour illustrer les détails du signalement (facultatif).",
-
-            "location": "Localisation",
-            "locationLabel": "Localisation de l'incident",
-            "latitude": "Latitude",
-            "longitude": "Longitude",
-            "geolocNotSupported": "La géolocalisation n'est pas supportée par votre navigateur.",
-            "geolocFailed": "Impossible d'obtenir votre position GPS."
+            "photoHint": "Vous pouvez ajouter jusqu'à 3 photos supplémentaires pour illustrer les détails du signalement (facultatif)."
         },
         "table": {
             "title": "Titre",

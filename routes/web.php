@@ -59,6 +59,6 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 Route::prefix('reports')->name('reports.')->group(function () {
     Route::get('/', fn() => view('pages/report/index'))->name('index');
     Route::get('/create', fn() => view('pages/report/create'))->name('create');
-    // Route::get('/{user}/edit', fn($user) => view('pages/user/edit', compact('user')))->name('edit');
-    // Route::get('/{user}', fn($user) => view('pages/user/show', compact('user')))->name('show');
+    Route::get('/{report}/edit', fn($report) => view('pages/report/edit', compact('report')))->name('edit');
+    Route::get('/{report}', fn($report) => view('pages/report/show', compact('report')))->name('show');
 });

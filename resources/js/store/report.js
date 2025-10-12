@@ -18,11 +18,8 @@ export const useReportStore = defineStore("report", () => {
             neighborhood: null,
             title: "",
             description: "",
-            address: null,
             image: null,
-            image_url: null,
             delete_image: null,
-            status: "pending",
             photos: [],
             location: { lat: null, lng: null },
         })
@@ -165,13 +162,36 @@ export const useReportStore = defineStore("report", () => {
             for (const [key, value] of Object.entries(form.value.data())) {
                 if (value == null) continue;
 
+                if (key === "location" && value.lat && value.lng) {
+                    formData.append("latitude", value.lat);
+                    formData.append("longitude", value.lng);
+                    continue;
+                }
+
                 if (value instanceof File) {
                     formData.append(key, value);
-                } else if (Array.isArray(value)) {
-                    formData.append(key, JSON.stringify(value));
-                } else {
-                    formData.append(key, value);
+                    continue;
                 }
+
+                if (Array.isArray(value)) {
+                    if (key === "photos") {
+                        value.forEach((photo, i) => {
+                            if (photo.file instanceof File) {
+                                formData.append(`photos[${i}]`, photo.file);
+                            } else if (photo.url) {
+                                formData.append(
+                                    `existing_photos[${i}]`,
+                                    photo.url
+                                );
+                            }
+                        });
+                    } else {
+                        formData.append(key, JSON.stringify(value));
+                    }
+                    continue;
+                }
+
+                formData.append(key, value);
             }
 
             formData.append("_method", "PUT");
@@ -187,7 +207,7 @@ export const useReportStore = defineStore("report", () => {
             );
 
             resetForm();
-            Object.assign(form.value, response.data.user);
+            Object.assign(form.value, response.data.report);
 
             return response.data;
         } catch (error) {
@@ -201,7 +221,9 @@ export const useReportStore = defineStore("report", () => {
 
     const destroy = async (id) => {
         try {
-            const response = await api.post(endpoints.report.destroy, { ids: [id] });
+            const response = await api.post(endpoints.report.destroy, {
+                ids: [id],
+            });
             return response.data;
         } catch (error) {
             if (error?.response?.data) throw error.response.data;

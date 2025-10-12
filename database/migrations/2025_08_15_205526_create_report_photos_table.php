@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->uuid('report_uuid');
-            $table->string('caption', 255)->nullable();
+            $table->string('identifier', 255)->nullable();
             $table->timestamps();
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
 
-            $table->foreign('report_uuid')->references('uuid')->on('reports')->onDelete('restrict');
+            $table->foreign('report_uuid')->references('uuid')->on('reports')->onDelete('cascade');
             $table->foreign('created_by')->references('uuid')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('uuid')->on('users')->onDelete('set null');
         });

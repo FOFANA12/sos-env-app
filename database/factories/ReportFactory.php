@@ -27,14 +27,12 @@ class ReportFactory extends Factory
     {
         $uuid = (string) Str::uuid();
         $user = User::first();;
-        $category = ReportCategory::first();
         $region = Region::first();
         $department = Department::first();
         $neighborhood = Neighborhood::first();
 
         return [
             'uuid' => $uuid,
-            'category_uuid' => $category->uuid,
             'region_uuid' => $region->uuid,
             'department_uuid' => $department->uuid,
             'neighborhood_uuid' => $neighborhood->uuid,
@@ -42,10 +40,7 @@ class ReportFactory extends Factory
             'description' => $this->faker->paragraph(),
             'latitude' => $this->faker->latitude(10, 8),
             'longitude' => $this->faker->longitude(11, 8),
-            'address' => $this->faker->address(),
             'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed', 'rejected']),
-            'is_public' => $this->faker->boolean(),
-            'published_at' => $this->faker->dateTimeBetween('-1 years', '+1 years'),
             'status_changed_at' => $this->faker->dateTimeBetween('-1 years', '+1 years'),
             'status_changed_by' => $user->uuid,
             'created_by' => $user->uuid,
