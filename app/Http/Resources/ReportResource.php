@@ -38,7 +38,10 @@ class ReportResource extends JsonResource
                 $this->department,
                 $this->region,
             ])),
-            'user' => $this->user,
+            'user' => $this->user_uuid && $this->user_name ? [
+                'uuid' => $this->user_uuid,
+                'name' => $this->user_name,
+            ] : null,
             'status' => ReportStatus::get($this->status, $currentLang),
             'image_url' => $this->image
                 ? FileHelper::url("uploads/reports/{$this->image}")

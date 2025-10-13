@@ -78,15 +78,16 @@
         </a>
 
         <!-- Edit -->
-        <a
+        <!-- <a
           :href="route('reports.edit', { report: item.id })"
           class="p-2 rounded-full hover:bg-gray-100 transition-colors"
         >
           <Edit class="w-4 h-4 text-primary-600" />
-        </a>
+        </a> -->
 
         <!-- Delete -->
         <button
+          v-if="canDelete"
           @click.stop="handleDelete"
           class="p-2 rounded-full hover:bg-red-50 transition-colors"
         >
@@ -108,10 +109,11 @@ import {
 } from "lucide-vue-next";
 import { route } from "ziggy-js";
 import { useAuthStore } from "@/js/store";
+import { inject } from 'vue';
 
 const { t } = useI18n();
-const authStore = useAuthStore();
 
+const authUser = inject('authUser');
 const props = defineProps({
   item: { type: Object, required: true },
 });
@@ -130,12 +132,14 @@ const handleDelete = (e) => {
 //   return user.role === "admin" || props.item.created_by === user.uuid;
 // });
 
-// const canDelete = computed(() => {
-//   const user = authStore.user;
-//   if (!user) return false;
-//   const isAdmin = user.role === "admin";
-//   const isAuthor = props.item.created_by === user.uuid;
-//   const isPending = props.item.status?.code === "pending";
-//   return (isAdmin || isAuthor) && isPending;
-// });
+const canDelete = computed(() => {
+  const user = authUser;
+  if (!user) return false;
+
+  const isAdmin = user.role === "admin";
+  const isAuthor = props.item.user?.uuid === user.uuid;
+  const isPending = props.item.status?.code === "pending";
+
+  return (isAdmin || isAuthor) && isPending;
+});
 </script>

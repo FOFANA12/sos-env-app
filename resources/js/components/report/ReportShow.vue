@@ -29,14 +29,14 @@
           {{ t("report.btnList") }}
         </LinkButton>
 
-        <LinkButton
+        <!-- <LinkButton
           :to="{ name: 'reports.edit', params: { id: reportId } }"
           variant="primary"
           class="min-w-[130px]"
         >
           <Edit class="w-5 h-5 mr-2" />
           {{ t("common.buttons.edit") }}
-        </LinkButton>
+        </LinkButton> -->
       </div>
     </form>
   </PageStateWrapper>

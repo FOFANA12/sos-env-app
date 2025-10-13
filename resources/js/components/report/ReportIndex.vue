@@ -148,6 +148,7 @@
       :items="store.reports"
       :item-component="ItemCard"
       :meta="store.meta"
+      :extra-props="{ authUser }"
       @pagination-change="onPageChange"
       @delete="deleteReport"
       grid-class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-4"
@@ -156,6 +157,7 @@
 </template>
 
 <script setup>
+import { provide } from 'vue';
 import { Filter, ChevronDown, X } from "lucide-vue-next";
 import { useReportStore } from "@/js/store";
 import { usePageState } from "@/js/composables/usePageState";
@@ -166,6 +168,14 @@ import PageStateWrapper from "@/js/components/ui/PageStateWrapper.vue";
 import DatatableSearchInput from "@/js/components/ui/DatatableSearchInput.vue";
 import DataGrid from "@/js/components/ui/DataGrid.vue";
 import ItemCard from "./components/ItemCard.vue";
+
+const props = defineProps({
+  authUser: {
+    type: Object,
+    default: null,
+  },
+});
+provide('authUser', props.authUser);
 
 const { t } = useI18n();
 

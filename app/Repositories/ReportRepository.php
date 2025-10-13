@@ -61,7 +61,8 @@ class ReportRepository
                 'regions.name as region',
                 'departments.name as department',
                 'neighborhoods.name as neighborhood',
-                'users.name as user'
+                'users.name as user_name',
+                'reports.created_by as user_uuid'
             );
 
         if (!empty($searchTerm)) {

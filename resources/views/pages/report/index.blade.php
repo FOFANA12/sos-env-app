@@ -33,6 +33,6 @@
 
     <!-- Reports list -->
     <div class="max-w-7xl mx-auto">
-        <report-index></report-index>
+        <report-index :auth-user='@json(Auth::check() ? new \App\Http\Resources\Auth\UserProfileResource(Auth::user()) : null)'></report-index>
     </div>
 @endsection

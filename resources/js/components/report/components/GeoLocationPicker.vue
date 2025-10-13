@@ -6,7 +6,7 @@
         {{ label }}
       </label>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-8 md:gap-3">
         <!-- Reset -->
         <button
           v-if="marker"
@@ -15,8 +15,8 @@
           class="text-sm text-red-600 hover:text-red-700 flex items-center gap-1"
           :disabled="loading"
         >
-          <Trash class="w-4 h-4" />
-          {{ t("report.maps.labelResetMyLocation") }}
+          <Trash class="w-6 h-6 md:w-4 md:h-4" />
+          <span class="hidden md:inline">{{ t("report.maps.labelResetMyLocation") }}</span>
         </button>
 
         <!-- Use my location -->
@@ -26,8 +26,8 @@
           :disabled="loading"
           class="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1 disabled:opacity-60"
         >
-          <MapPin class="w-4 h-4" />
-          {{ t("report.maps.labelUseMyLocation") }}
+          <MapPin class="w-6 h-6 md:w-4 md:h-4" />
+          <span class="hidden md:inline">{{ t("report.maps.labelUseMyLocation") }}</span>
         </button>
       </div>
     </div>

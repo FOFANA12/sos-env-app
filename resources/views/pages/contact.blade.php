@@ -42,7 +42,7 @@
 
     <!-- Contact Section -->
     <section class="pb-16  bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
                 <!-- Left Column - Contact Info -->
@@ -168,7 +168,7 @@
                 <!-- Right Column - Contact Form -->
                 <div>
                     <form action="{{ route('contact.send') }}" method="POST"
-                        class="bg-white p-8 rounded-xl shadow-sm space-y-6">
+                        class="bg-white p-4 md:p-8 rounded-xl shadow-sm space-y-6">
                          @csrf
 
                         <div class=" mb-6">
