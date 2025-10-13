@@ -11,7 +11,8 @@
             <div class="flex items-center lg:space-x-8">
                 <a href="{{ url('/') }}" class="flex items-center">
                     <img src="{{ url('images/logo.png') }}" alt="Logo" class="h-10 w-10 object-contain" />
-                    <span class="md:hidden lg:flex text-sm lg:text-xl font-bold text-gray-900">{{ config('app.name') }}</span>
+                    <span
+                        class="md:hidden lg:flex text-sm lg:text-xl font-bold text-gray-900">{{ config('app.name') }}</span>
                 </a>
 
                 <!-- Desktop Menu -->
@@ -53,9 +54,11 @@
                         <span>{{ __('app/menu.register') }}</span>
                     </a>
                 @else
-                    <!-- Settings Dropdown -->
-                    @include('components.settings-dropdown')
-                    
+                    @if (Auth::user()->role === 'admin')
+                        <!-- Settings Dropdown -->
+                        @include('components.settings-dropdown')
+                    @endif
+
                     <!-- Profile Dropdown -->
                     @include('components.profile-dropdown')
 

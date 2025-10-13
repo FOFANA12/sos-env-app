@@ -45,12 +45,7 @@ axiosInstance.interceptors.response.use(
         useLoaderStore().stop();
 
         if (error.response?.status === 401) {
-            const message =
-                error.response?.data?.message ||
-                "Your session has expired. Please log in again.";
-            window.location.href = `/login?type=error&message=${encodeURIComponent(
-                message
-            )}`;
+            window.location.href = 'login';
         }
 
         return Promise.reject(error);

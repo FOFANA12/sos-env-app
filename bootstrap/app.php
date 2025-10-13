@@ -30,6 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'api-auth/*',
             'password/*',
         ]);
+
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
 
@@ -90,17 +94,21 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Generic HTTP exceptions (403, 404 explicite, 500, etc.)
         $exceptions->render(function (HttpExceptionInterface $e, Request $request) {
-            $message = $e->getMessage() ?: 'HTTP error.';
+            $status  = $e->getStatusCode();
+            $message = $e->getMessage() ?: __('errors.generic');
 
+            // Return JSON for API
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'message' => $message,
-                ], $e->getStatusCode());
+                ], $status);
             }
 
-            $status = $e->getStatusCode();
-            $view   = view()->exists("errors.$status") ? "errors.$status" : "errors.default";
+            // Choose the correct Blade error view
+            $view = view()->exists("errors.$status")
+                ? "errors.$status"
+                : "errors.default";
 
-            return response()->view($view, ['message' => $message], $status);
+            return response()->view($view, compact('message', 'status'), $status);
         });
     })->create();

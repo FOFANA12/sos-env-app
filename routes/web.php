@@ -33,7 +33,7 @@ Route::middleware('guest')->group(function () {
         ->name('web.logout.redirect');
 });
 
-Route::middleware('auth:web')->group(function () {
+Route::middleware(['auth:web', 'admin'])->group(function () {
     Route::get('/profile', fn() => view('pages/profile'))->name('profile');
 
     Route::prefix('users')->name('users.')->group(function () {
