@@ -8,7 +8,7 @@
   >
    
     <!-- Action buttons -->
-    <div class="flex justify-end gap-4">
+    <div class="flex justify-end gap-4 mb-6 md:mb-0">
       <Button
         v-if="selectedRows.length > 0"
         :icon="Trash"

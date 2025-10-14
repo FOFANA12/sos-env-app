@@ -9,23 +9,10 @@
 
             <!-- Left side -->
             <div class="flex items-center lg:space-x-8">
-                <!-- Mobile Menu Toggle (visible only on mobile) -->
-                <button id="mobile-menu-toggle"
-                    class="md:hidden bg-gray-100 inline-flex items-center justify-center p-2 rounded-md text-gray-700 focus:outline-none mr-3">
-                    <svg id="menu-open-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg id="menu-close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-
                 <a href="{{ url('/') }}" class="flex items-center">
                     <img src="{{ url('images/logo.png') }}" alt="Logo" class="h-10 w-10 object-contain" />
-                    <span class="hidden lg:flex text-xl font-bold text-gray-900 ml-2">{{ config('app.name') }}</span>
+                    <span
+                        class="md:hidden lg:flex text-sm lg:text-xl font-bold text-gray-900">{{ config('app.name') }}</span>
                 </a>
 
                 <!-- Desktop Menu -->
@@ -53,17 +40,16 @@
                 </div>
             </div>
 
-            <!-- Right side - Desktop & Mobile -->
-            <div class="flex items-center space-x-2 lg:space-x-4">
+            <!-- Right side -->
+            <div class="hidden md:flex items-center space-x-2 lg:space-x-4">
                 @guest
-                    <!-- Not Authenticated - Desktop only -->
+                    <!-- Not Authenticated -->
                     <a href="{{ route('login') }}"
-                        class="hidden md:flex btn-secondary items-center gap-2 text-sm px-4 py-2 hover:bg-primary-50">
+                        class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 hover:bg-primary-50">
                         <x-lucide-log-in class="w-4 h-4" />
                         <span>{{ __('app/menu.login') }}</span>
                     </a>
-                    <a href="{{ route('register') }}" 
-                        class="hidden md:flex btn-primary items-center gap-2 text-sm px-4 py-2">
+                    <a href="{{ route('register') }}" class="btn-primary flex items-center gap-2 text-sm px-4 py-2">
                         <x-lucide-user-plus class="w-4 h-4" />
                         <span>{{ __('app/menu.register') }}</span>
                     </a>
@@ -75,7 +61,24 @@
 
                     <!-- Profile Dropdown -->
                     @include('components.profile-dropdown')
+
                 @endguest
+            </div>
+
+            <!-- Mobile toggle -->
+            <div class="md:hidden">
+                <button id="mobile-menu-toggle"
+                    class="bg-gray-100 inline-flex items-center justify-center p-2 rounded-md text-gray-700 focus:outline-none">
+                    <svg id="menu-open-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg id="menu-close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -104,21 +107,19 @@
                 {{ __('app/menu.contact') }}
             </a>
 
-            @guest
-                <div class="pt-3 space-y-3 border-t border-gray-200">
-                    <a href="{{ url('/login') }}"
-                        class="w-full flex items-center justify-center gap-2 btn-secondary text-base py-2.5 hover:bg-primary-50">
-                        <x-lucide-log-in class="w-5 h-5" />
-                        <span>{{ __('app/menu.login') }}</span>
-                    </a>
+            <div class="px-2 pt-3 pb-0 space-y-3 bg-white border-t border-gray-200">
+                <a href="{{ url('/login') }}"
+                    class="w-full flex items-center justify-center gap-2 btn-secondary text-base py-2.5 hover:bg-primary-50">
+                    <x-lucide-log-in class="w-5 h-5" />
+                    <span>{{ __('app/menu.login') }}</span>
+                </a>
 
-                    <a href="{{ url('/register') }}"
-                        class="w-full flex items-center justify-center gap-2 btn-primary text-base py-2.5">
-                        <x-lucide-user-plus class="w-5 h-5" />
-                        <span>{{ __('app/menu.register') }}</span>
-                    </a>
-                </div>
-            @endguest
+                <a href="{{ url('/register') }}"
+                    class="w-full flex items-center justify-center gap-2 btn-primary text-base py-2.5">
+                    <x-lucide-user-plus class="w-5 h-5" />
+                    <span>{{ __('app/menu.register') }}</span>
+                </a>
+            </div>
         </div>
     </div>
 </nav>

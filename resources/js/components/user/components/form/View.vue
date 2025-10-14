@@ -70,12 +70,13 @@
             </div>
 
             <!-- Role -->
-            <div class="col-span-12 md:col-span-6">
+            <div class="col-span-12 md:col-span-6" v-if="form.role">
               <InputReadonly
                 id="role"
                 name="role"
                 :label="t('user.form.role')"
                 :modelValue="form.role?.name"
+                 :placeholder="t('user.form.rolePlaceholder')"
                 readonly
               />
             </div>
